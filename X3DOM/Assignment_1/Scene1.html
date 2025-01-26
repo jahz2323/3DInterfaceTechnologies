@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Jackpot</title>
+    <script type='text/javascript' src='../libs/x3dom-full.js'></script>
+</head>
+<body style="background: #181818">
+<h1 style="color: #fff; text-align: center">Jackpot</h1>
+<x3d width="800px" height="600px">
+    <Scene>
+<!--        <viewpoint position='0 0 0'>-->
+        <Shape>
+            <Appearance DEF='MagentaAppearance'>
+                <Material diffuseColor='0 1 0'>
+                    </Material>
+            </Appearance>
+            <Rectangle2D ccw='true' lit='true' size='7,7' solid='true'>
+
+            </Rectangle2D>
+        </Shape>
+        <transform translation="0 0 0.1">
+        <Shape>
+            <Appearance DEF='MagentaAppearance'>
+                <Material diffuseColor='1 0 0'>
+                    </Material>
+            </Appearance>
+            <Rectangle2D ccw='true' lit='true' size='6,6' solid='true'>
+            </Rectangle2D>
+        </Shape>
+        </transform>
+        <!-- create 3 cubes -->
+
+        <transform translation="0 0 0.2">
+            <transform DEF="def_cube" id="cube" translation="-1.5 0 0" rotation="0 0 0 .5">
+                <Shape>
+                    <Appearance DEF='MagentaAppearance'>
+                        <Material diffuseColor='0 0 1'>
+                        </Material>
+                    </Appearance>
+                    <Box size='1 1 1'>
+                    </Box>
+                </Shape>
+            </transform>
+            <transform id="cube" translation="0 0 0" rotation="0 0 0 .5">
+                <Shape>
+                    <Appearance DEF='MagentaAppearance'>
+                        <Material diffuseColor='0 1 1'>
+                        </Material>
+                    </Appearance>
+                    <Box size='1 1 1'>
+                    </Box>
+                </Shape>
+            </transform>
+            <transform id="cube" translation="1.5 0 0" rotation="0 0 0 .5">
+                <Shape>
+                    <Appearance DEF='MagentaAppearance'>
+                        <Material diffuseColor='1 0 1'>
+                        </Material>
+                    </Appearance>
+                    <Box size='1 1 1'>
+                    </Box>
+                </Shape>
+            </transform>
+        </transform>
+        <timeSensor DEF='clock' cycleInterval='3' loop='true'></timeSensor>
+        <PositionInterpolator DEF='spin' key='0 0.5 1' keyValue='0 0 0 0 0 1 0 0 0'></PositionInterpolator>
+        <ROUTE fromNode='clock' fromField='fraction_changed' toNode='spin' toField='set_fraction'></ROUTE>
+
+        <!-- create a text -->
+        <transform translation="-1.5 1 0.3">
+        <shape>
+            <appearance>
+                <material diffuseColor='1 1 1'></material>
+            </appearance>
+            <text string='Jackpot' solid='true' spacing='1' solid='true' size='2 2 2'></text>
+        </shape>
+        </transform>
+
+    </Scene>
+</x3d>
+<!-- create a button to spin the cubes -->
+<button onclick="spinCubes()">Spin</button>
+<script>
+    function spinCubes() {
+
+    }
+</script>
+</body>
+</html>
