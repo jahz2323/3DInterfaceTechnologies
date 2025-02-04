@@ -1,0 +1,123 @@
+
+<html>
+<head>
+    <title>Hello X3DOM</title>
+    <script type='text/javascript' src='../X3DOM/x3dom.js'> </script>
+    <link rel='stylesheet' type='text/css' href='../X3DOM/x3dom.css'></link>
+
+    <script>
+
+        function main() {
+            addGround();
+
+            for(let x=-20; x<20; x+=5)
+                for(let z=-20; z<20; z+=5)
+                    addBuilding(x, z);
+
+            document.addEventListener('keyup', keyup);
+        }
+
+        function addGround() {
+            let scene = document.getElementById("scene");
+
+            let shape = document.createElement("shape");
+
+            let appearance = document.createElement("appearance");
+            let material = document.createElement("material");
+            material.setAttribute("emissiveColor", "0.5 0.5 0.5");
+
+            appearance.append(material);
+
+            let box = document.createElement("box");
+            box.setAttribute("size", "50 0.1 50");
+
+
+            shape.append(appearance);
+            shape.append(box);
+
+            scene.append(shape);
+
+
+        }
+
+        function addBuilding(x, z) {
+            let scene = document.getElementById("scene");
+
+            let transform = document.createElement("transform");
+            transform.setAttribute("translation", x+" 1 "+z);
+            scene.append(transform);
+
+            let shape = document.createElement("shape");
+
+            let appearance = document.createElement("appearance");
+            //let material = document.createElement("material");
+            //material.setAttribute("diffuseColor", "1 0 0");
+
+            let imageTexture = document.createElement("ImageTexture")
+            imageTexture.setAttribute("url", "../res/textures/building1.jpg")
+            appearance.append(imageTexture);
+
+            let box = document.createElement("box");
+            box.setAttribute("size", "2 2 2");
+
+
+            shape.append(appearance);
+            shape.append(box);
+
+            transform.append(shape);
+
+
+        }
+
+        let z=10;
+        let x=0;
+
+        let heading = 0;  // point in -ve z direction
+        let headingDelta = Math.PI / 60;
+
+        function keyup(event) {
+            let key = event.key;
+
+            if (key == "ArrowUp") {
+                z -= Math.cos(heading);
+                x -= Math.sin(heading)
+            } else if (key == "ArrowDown") {
+                z += Math.cos(heading);
+                x += Math.sin(heading);
+            } else if (key == "ArrowLeft") {
+                heading += headingDelta;
+            } else if (key == "ArrowRight") {
+                heading -= headingDelta;
+            }
+
+            let viewpoint = document.getElementById("viewpoint");
+            viewpoint.setAttribute("position", x + " 1 " + z);
+            viewpoint.setAttribute("orientation", "0 1 0 " + heading);
+        }
+
+
+    </script>
+
+</head>
+
+<body onload="main()">
+<x3d width='500px' height='400px' >
+    <scene id="scene">
+        <Viewpoint id="viewpoint"
+                   position="0 1 10"
+                   orientation="0 0 0 0"
+                   zNear="0"
+                   zFar="1000"
+                   centerOfRotation="0 0 0"
+                   fieldOfView="0.78540"
+                   description="defaultX3DViewpointNode">
+
+        </Viewpoint>
+    </scene>
+</x3d>
+
+
+</body>
+</html>
+
+

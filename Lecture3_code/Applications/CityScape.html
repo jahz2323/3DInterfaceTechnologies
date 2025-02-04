@@ -1,0 +1,52 @@
+
+<html>
+<head>
+    <title>Hello X3DOM</title>
+    <script type='text/javascript' src='../X3DOM/x3dom.js'> </script>
+    <link rel='stylesheet' type='text/css' href='../X3DOM/x3dom.css'></link>
+
+    <script>
+
+        function main() {
+            for(let x=-20; x<20; x+=5)
+                for(let z=-20; z<20; z+=5)
+                    addBuilding(x, z);
+        }
+
+        function addBuilding(x, z) {
+            let scene = document.getElementById("scene");
+
+            let transform = document.createElement("transform");
+            transform.setAttribute("translation", x+" 0 "+z);
+            scene.append(transform);
+
+            let shape = document.createElement("shape");
+
+            let appearance = document.createElement("appearance");
+            let material = document.createElement("material");
+            material.setAttribute("diffuseColor", "1 0 0");
+            appearance.append(material);
+
+            let box = document.createElement("box");
+
+            shape.append(appearance);
+            shape.append(box);
+
+            transform.append(shape);
+        }
+
+    </script>
+
+</head>
+
+<body onload="main()">
+<x3d width='500px' height='400px'>
+    <scene id="scene">
+        </scene>
+</x3d>
+
+
+</body>
+</html>
+
+

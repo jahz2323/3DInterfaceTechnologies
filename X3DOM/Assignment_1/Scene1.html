@@ -2,38 +2,51 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Jackpot</title>
+    <title>Space Fighter</title>
     <script type='text/javascript' src='../libs/x3dom-full.js'></script>
-    <script src="main.js"></script>
+    <link rel='stylesheet' type='text/css' href='styles.css'></link>
+
 </head>
 <body style="background: #3a3a3a" onload="main();">
-<h1 style="color: #fff; text-align: center">Jackpot</h1>
+<h1 style="color: #fff; text-align: center">Space Fighter</h1>
 
 <!-- 3 games, slot machine, plinko, roulette -->
 <!-- navigation around the room, small room, lights above each machine  -->
 
-<div id="content">
-    <x3d width="500px" height="500px">
+<div id="content" style="width: 100%;">
+    <x3d width="1000px" height="400px" style="background: white;" disableKeys="true">
         <scene id="scene">
-            <Viewpoint id="Origin" position="0 0 10" orientation="  " ></Viewpoint>
+            <group id="projectile">
+                <transform id="leftRightTransform">
+                    <transform id="upDownTransform">
+                        <transform rotation="1 0 0 -1.57" translation="0 -3 -10">
+                            <shape>
+                                <appearance>
+                                    <material diffuseColor='0.7 0.7 0.7'></material>
+                                </appearance>
+                                <cylinder height="4" radius="0.5"></cylinder>
+                            </shape>
+                        </transform>
+                    </transform>
+                </transform>
+            </group>
+
+            <Viewpoint id="viewpoint"
+                       position="0 0 0"
+                       orientation="0 0 0 0"
+                       zNear="0"
+                       zFar="1000"
+                       centerOfRotation="0 -3 -10"
+                       fieldOfView="0.80"
+                       description="defaultX3DViewpointNode">
+            </Viewpoint>
+
+
         </scene>
     </x3d>
-    <div id="controls">
-        <button> slots </button>
-        <button> plinko </button>
-        <button> roulette</button>
-        <button> Main Room </button>
-    </div>
-    <div id="Money">
-        <label for="User_money" style="color: #fff; text-align: center">money</label>
-        <input type="number" id="User_money" min="1" max="1000" value="1"></input>
-        <button onclick="Money()">Bet</button>
-    </div>
-    <button onclick="addBox()"> addObject </button>
-    <button onclick="change_view()"> zoomout </button>
 </div>
 
-
-
+</div>
+<script src="main.js"></script>
 </body>
 </html>
