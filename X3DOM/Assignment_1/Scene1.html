@@ -3,18 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>Space Fighter</title>
-    <script type='text/javascript' src='../libs/x3dom-full.js'></script>
-    <link rel='stylesheet' type='text/css' href='styles.css'></link>
+    <script src='../libs/x3dom-full.js' type='text/javascript'></script>
+    <link href='styles.css' rel='stylesheet' type='text/css'></link>
+    <script type="module">
+        import {initalize_borders} from "../Assignment_1/Scripts/Map.js"
+        import {initalize_ship} from "../Assignment_1/Scripts/ship.js";
 
+        initalize_borders(document);
+        initalize_ship(document);
+    </script>
 </head>
-<body style="background: #3a3a3a" onload="main();">
+<body  onload=main() style="background: #3a3a3a">
 <h1 style="color: #fff; text-align: center">Space Fighter</h1>
-
-<!-- 3 games, slot machine, plinko, roulette -->
-<!-- navigation around the room, small room, lights above each machine  -->
-
 <div id="content" style="width: 100%;">
-    <x3d width="1000px" height="400px" style="background: white;" disableKeys="true">
+    <div id="position_overlay">
+        <h2>Yaw</h2>
+        <p id="yaw">
+            Current Yaw Path:
+        </p>
+        <h2>Pitch</h2>
+        <p id="pitch">
+            Current Pitch:
+        </p>
+    </div>
+    <x3d disableKeys="true" height="400px" style="background: white;" width="1000px">
         <scene id="scene">
             <group id="projectile">
                 <transform id="leftRightTransform">
@@ -30,23 +42,18 @@
                     </transform>
                 </transform>
             </group>
-
-            <Viewpoint id="viewpoint"
-                       position="0 0 0"
-                       orientation="0 0 0 0"
-                       zNear="0"
-                       zFar="1000"
-                       centerOfRotation="0 -3 -10"
+            <Viewpoint
+                       description="defaultX3DViewpointNode"
                        fieldOfView="0.80"
-                       description="defaultX3DViewpointNode">
+                       id="viewpoint"
+                       orientation="0 0 0 0"
+                       position="0 0 10"
+                       zFar="1000"
+                       zNear="0">
             </Viewpoint>
-
-
         </scene>
     </x3d>
 </div>
-
-</div>
-<script src="main.js"></script>
 </body>
+<script src="main.js"></script>
 </html>
