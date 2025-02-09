@@ -8,9 +8,12 @@
     <script type="module">
         import {initalize_borders} from "../Assignment_1/Scripts/Map.js"
         import {initalize_ship} from "../Assignment_1/Scripts/ship.js";
+        import {update_camera} from "./Scripts/camera_test.js";
+        import {initalize_planets} from "./Scripts/planets.js";
 
         initalize_borders(document);
         initalize_ship(document);
+        initalize_planets(document);
     </script>
 </head>
 <body  onload=main() style="background: #3a3a3a">
@@ -26,17 +29,17 @@
             Current Pitch:
         </p>
     </div>
-    <x3d disableKeys="true" height="400px" style="background: white;" width="1000px">
+    <x3d disableKeys="true" height="800px" style="background: white;" width="1000px">
         <scene id="scene">
             <group id="projectile">
                 <transform id="leftRightTransform">
                     <transform id="upDownTransform">
-                        <transform rotation="1 0 0 -1.57" translation="0 -3 -10">
+                        <transform rotation="1 0 0 -1.57" translation="0 0 -2">
                             <shape>
                                 <appearance>
                                     <material diffuseColor='0.7 0.7 0.7'></material>
                                 </appearance>
-                                <cylinder height="4" radius="0.5"></cylinder>
+                                <cylinder height="3" radius=.95></cylinder>
                             </shape>
                         </transform>
                     </transform>
@@ -44,15 +47,31 @@
             </group>
             <Viewpoint
                        description="defaultX3DViewpointNode"
-                       fieldOfView="0.80"
+
                        id="viewpoint"
                        orientation="0 0 0 0"
-                       position="0 0 10"
-                       zFar="1000"
+                       position="0 10 30"
+                       zFar="5000"
                        zNear="0">
             </Viewpoint>
+<!--            <navigationInfo type='"fly" "any"' id="navType"></navigationInfo>-->
         </scene>
     </x3d>
+</div>
+<div id="CameraControl_Container">
+    <button id="birds_eye">
+        up
+    </button>
+    <button id="bottom_up">
+        down
+    </button>
+    <button id="left_view">
+        left
+    </button>
+    <button id="right_view">
+        right
+    </button>
+
 </div>
 </body>
 <script src="main.js"></script>

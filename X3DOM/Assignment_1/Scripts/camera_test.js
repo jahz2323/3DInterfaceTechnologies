@@ -1,4 +1,3 @@
-
 // //3D vector yaw
 // let yaw = -90.0; //float
 // let pitch = 0.0; //float
@@ -54,3 +53,46 @@
 //camera
 // let headingDelta = Math.PI / 60.0;
 // let heading = 0;
+
+document.getElementById("birds_eye").addEventListener("click", function () {
+    update_camera("up");
+});
+
+document.getElementById("bottom_up").addEventListener("click", function () {
+    update_camera("down");
+});
+
+document.getElementById("left_view").addEventListener("click", function () {
+    update_camera("left");
+});
+
+document.getElementById("right_view").addEventListener("click", function () {
+    update_camera("right");
+});
+
+function update_camera(direction) {
+    console.log("Camera moved: " + direction);
+    switch (direction) {
+        case "up":
+            viewpoint.setAttribute("position", "0 50 0");
+            viewpoint.setAttribute("orientation", "1 0 0 -1.57");
+            break;
+        case "down":
+            viewpoint.setAttribute("position", "0 -50 0");
+            viewpoint.setAttribute("orientation", "1 0 0 1.57");
+            break;
+        case "left":
+            viewpoint.setAttribute("position", "-20 0 0");
+            viewpoint.setAttribute("orientation", "0 1 0 -1.57");
+            break;
+        case "right":
+            viewpoint.setAttribute("position", "20 0 0");
+            viewpoint.setAttribute("orientation", "0 1 0 1.57");
+            break;
+    }
+
+}
+
+export {
+    update_camera
+}

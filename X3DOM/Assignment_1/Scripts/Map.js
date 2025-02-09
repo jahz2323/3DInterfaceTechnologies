@@ -2,7 +2,7 @@ function initalize_borders(document) {
     console.log("Creating the floor");
     let border_arr = [];
     let rotation_param = ["1 0 0 -1.57", "0 1 0 0", "0 1 0 1.57", "1 0 0 1.57"];
-    let translation_param = ["0 -50 0", "0 0 -50", "-50 0 0", "0 50 0 "];
+    let translation_param = ["0 -500 0", "0 0 -500", "-500 0 0", "0 500 0 "];
 
     for (let i = 0; i < rotation_param.length; i++) {
         let transform = document.createElement("Transform");
@@ -16,7 +16,7 @@ function initalize_borders(document) {
         appearance.appendChild(ImageTexture);
 
         let Rectangle = document.createElement("Rectangle2D");
-        Rectangle.setAttribute("size", "100 100", "solid", "true");
+        Rectangle.setAttribute("size", "1200 1200", "solid", "true");
 
         transform.setAttribute("translation", translation_param[i]);
         transform.setAttribute("rotation", rotation_param[i]);

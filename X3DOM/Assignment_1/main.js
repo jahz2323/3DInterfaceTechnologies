@@ -8,9 +8,6 @@ let scene = document.getElementById("scene");
 let timeStart = -1;
 let rotationRads = 2 * Math.PI;
 
-//barrel geometry
-let leftRightTransform = document.getElementById("leftRightTransform");
-let upDownTransform = document.getElementById("upDownTransform");
 
 // Projectiles - first is the ship
 let projectilesGroup = document.getElementById("projectile");
@@ -28,14 +25,16 @@ function animationFrame() {
     window.requestAnimationFrame(updateModel);
 }
 
+
+
 function updateModel(timeStamp_ms) {
     if (timeStart === -1) {
         timeStart = timeStamp_ms;
     }
     projectile_movement();
-    ship_movement();
     window.requestAnimationFrame(updateModel);
 }
+
 
 function projectile_movement() {
     for (let p = 1; p < projectiles.length; p++) {
@@ -45,33 +44,12 @@ function projectile_movement() {
         let translationZ = translationArray[2];
 
         translationZ -= 0.9; // speed of projectile can implement a speed variable
-        if (translationZ > -50) {
-            currentProjectile.setAttribute("translation", "0 -3 " + translationZ);
+        if (translationZ > -500) {
+            currentProjectile.setAttribute("translation", "0 0 " + translationZ);
         } else {
             projectilesGroup.removeChild(projectiles[p]);
         }
     }
-}
-
-function ship_movement() {
-    //ship will drift in the direction of camera
-    let ship = projectiles[0].children[0].children[0];
-    let translation = ship.getAttribute("translation");
-    let translationArray = translation.split(" ");
-    let translationZ = translationArray[2];
-    // translationZ -= 0.001;
-    ship.setAttribute("translation", "0 -3 " + translationZ);
-}
-
-
-//coordinate information x y z
-let viewpoint = document.getElementById("viewpoint");
-
-function display_camera_pos() {
-    console.log("Current Camera Position: " + document.getElementById("viewpoint").position);
-    console.log("Current Camera Orientation: " + document.getElementById("viewpoint").orientation);
-    console.log("Current yaw " + upDownTransform.rotation);
-    console.log("Current pitch " + leftRightTransform.rotation);
 }
 
 
@@ -83,6 +61,14 @@ let yaw = 0;
 let lastx = 500;
 let lasty = 200;
 let intial = true;
+
+//barrel geometry
+let leftRightTransform = document.getElementById("leftRightTransform");
+let upDownTransform = document.getElementById("upDownTransform");
+
+
+//PITCH LEFT RIGHT
+//YAW UP DOWN
 
 function updateCamera(yaw, pitch) {
     if(intial){
@@ -100,8 +86,6 @@ function updateCamera(yaw, pitch) {
     direction[2] = Math.sin(pitch * Math.PI / 180);
     direction[3] = Math.sin(yaw * Math.PI / 180) * Math.cos(pitch * Math.PI / 180);
 
-
-
     leftRightTransform.setAttribute("rotation", "0 1 0 " + pitch);
     upDownTransform.setAttribute("rotation", "1 0 0 " + yaw);
     let position_overlay = [document.getElementById("yaw"),  document.getElementById("pitch") ] ;
@@ -110,7 +94,7 @@ function updateCamera(yaw, pitch) {
 }
 
 function keyup(event) {
-    let angleincrement = Math.PI / 180.0;
+    let angleincrement = Math.PI / 20.0;
     switch (event.key) {
         case 'ArrowUp':
             yaw += angleincrement;
@@ -132,7 +116,7 @@ function keyup(event) {
             fireProjectile();
             break;
         case `d`:
-            display_camera_pos();
+            // display_camera_pos();
             break;
     }
     console.log("User pressed: " + event.key);
@@ -150,7 +134,7 @@ function fireProjectile() {
     left_rightTransform.append(up_downTransform);
 
     let distanceTransform = document.createElement("transform");
-    distanceTransform.setAttribute("translation", "0 -3 -12");
+    distanceTransform.setAttribute("translation", "0 0 -5");
     up_downTransform.append(distanceTransform);
 
     let shape = document.createElement("shape");
