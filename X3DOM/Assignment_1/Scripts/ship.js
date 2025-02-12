@@ -41,9 +41,31 @@ function createAccelerator(document, translation) {
 
     transform.setAttribute("translation", translation);
     transform.setAttribute("rotation", "1 0 0 -1.57");
-    transform.setAttribute("scale", "0.5 0.5 0.5");
+    transform.setAttribute("scale", "1 10 1");
     transform.appendChild(shape);
     return transform;
+}
+function createLaserBarrel(document, translation) {
+    let barrelGroup = document.createElement("transform");
+    barrelGroup.setAttribute("translation", translation);
+    barrelGroup.setAttribute("rotation", "1 0 0 1.57"); // Rotate to point forward
+
+    let shape = document.createElement("shape");
+    let appearance = document.createElement("appearance");
+    let material = document.createElement("material");
+    material.setAttribute("diffuseColor", "1 0 0"); // Red color
+    material.setAttribute("emissiveColor", "0.8 0 0"); // Glow effect
+    appearance.appendChild(material);
+
+    let cylinder = document.createElement("Cylinder");
+    cylinder.setAttribute("height", "5"); // Barrel length
+    cylinder.setAttribute("radius", "1.2"); // Barrel thickness
+
+    shape.appendChild(appearance);
+    shape.appendChild(cylinder);
+    barrelGroup.appendChild(shape);
+
+    return barrelGroup;
 }
 
 function ship(document) {
@@ -114,8 +136,9 @@ function ship(document) {
         shipGroup.appendChild(createShape(document, color, emissive, points));
     });
 
-    shipGroup.appendChild(createAccelerator(document, "5 0 1"));
-    shipGroup.appendChild(createAccelerator(document, "-5 0 1"));
+    shipGroup.appendChild(createAccelerator(document, "10 0 1"));
+    shipGroup.appendChild(createAccelerator(document, "-10 0 1"));
+    shipGroup.appendChild(createLaserBarrel(document, "0 0 -3"));
 
 
     let yaw_transform = document.createElement("transform");

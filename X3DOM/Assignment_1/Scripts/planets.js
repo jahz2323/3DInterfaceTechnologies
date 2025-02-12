@@ -7,17 +7,17 @@ function initalize_planets(document) {
 }
 
 function planets(document){
-    // saturn(document);
-    // sun(document);
-    // earth(document);
-    // mars(document);
+    saturn(document);
+    sun(document);
+    earth(document);
+    mars(document);
     console.log("Creating the planets");
 }
 
-let saturn_position = ["10 0 -200"];
-let sun_position = ["-200 -250 400"];
-let earth_position = ["-100 0 0"];
-let mars_position = ["-150 0 0"];
+let saturn_position = ["0 10 -400"];
+let sun_position = ["0 0 -800"];
+let earth_position = ["0 0 200"];
+let mars_position = ["0 0 -600"];
 
 
 function mars(document) {
@@ -126,11 +126,11 @@ function saturn(document) {
     let ringGroup = document.createElement("transform");
     ringGroup.setAttribute("id", "rings");
     ringGroup.setAttribute("translation", `${saturn_position}`);
-    ringGroup.setAttribute("rotation", "1 0 0 1.57");
+    ringGroup.setAttribute("rotation", "0 0 1 1.57");
 
     let numPoints = 200; // Number of segments in the ring
     let insideRadius = 50;
-    let outsideRadius = 100;
+    let outsideRadius = 70;
     let centerPoint = "0 0 0"; // Central anchor
 
     let points = [];
@@ -140,25 +140,16 @@ function saturn(document) {
     for (let i = 0; i <= numPoints; i++) {
         let angle = i * angleStep;
         let rad = angle * (Math.PI / 180); // Convert to radians
-
         let outerX = Math.cos(rad) * outsideRadius;
-        let outerY = Math.sin(rad) * outsideRadius;
+        let outerZ = Math.sin(rad) * outsideRadius; // ✅ Change Y to Z
         let innerX = Math.cos(rad) * insideRadius;
-        let innerY = Math.sin(rad) * insideRadius;
-
-        points.push(`${outerX} ${outerY} 0`);
-        points.push(`${innerX} ${innerY} 0`);
-        //backface
-        back_points.push(`${innerX} ${innerY} 0`);
-        back_points.push(`${outerX} ${outerY} 0`);
-
+        let innerZ = Math.sin(rad) * insideRadius; // ✅ Change Y to Z
+        points.push(`${innerX} 0 ${innerZ}`);
+        points.push(`${outerX} 0 ${outerZ}`);
     }
-
     // Create shape using a single triangle fan
     ringGroup.appendChild(createShape(document, "0.8 0.8 0.5", "0.2 0.2 0.1", points.join(" ")));
-    ringGroup.appendChild(createShape(document, "0.8 0.4 0.5", "0.2 0.2 0.1", back_points.join(" ")));
     scene.appendChild(ringGroup);
-
     rotateRings(document);
 }
 
@@ -168,7 +159,7 @@ function rotateRings(document) {
 
     function animate() {
         angle += 5; // Increase rotation speed
-        rings.setAttribute("rotation", `0 0 1 ${angle * (Math.PI / 180)}`); // Convert to radians
+        rings.setAttribute("rotation", `0 1 0 ${angle * (Math.PI / 180)}`); // Convert to radians
         requestAnimationFrame(animate);
     }
 

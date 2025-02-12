@@ -20,47 +20,8 @@
 <body onload=main() style="background: #3a3a3a">
 <h1 style="color: #fff; text-align: center">Space Fighter</h1>
 <div id="content" style="width: 100%;">
-    <div id="position_overlay">
-        <h2>Yaw</h2>
-        <p id="yaw">
-            Current Yaw Path:
-        </p>
-        <h2>Pitch</h2>
-        <p id="pitch">
-            Current Pitch:
-        </p>
-    </div>
-    <x3d disableKeys="true" height="400px" style="background: white;" width="400px">
+    <x3d disableKeys="true" height="700px"  width="800px">
         <scene id="scene">
-            <group id="projectile">
-                <transform id="leftRightTransform">
-                    <transform id="upDownTransform">
-                        <transform rotation="1 0 0 -1.57" translation="0 0 -2">
-                            <shape>
-                                <appearance>
-                                    <material diffuseColor='0.7 0.7 0.7'></material>
-                                </appearance>
-                                <cylinder height="3" radius=.95></cylinder>
-                            </shape>
-                        </transform>
-                    </transform>
-                </transform>
-            </group>
-<!--            <group id="crosshair">-->
-<!--                <transform id="yawTransform">-->
-<!--                    <transform id="pitchTransform">-->
-<!--                        <transform translation="0 0 -50">-->
-<!--                            <shape>-->
-<!--                                <appearance>-->
-<!--                                    <material diffuseColor='0.7 0.7 0.7'></material>-->
-<!--                                </appearance>-->
-<!--                                <box rotate="true"></box>-->
-<!--                            </shape>-->
-<!--                        </transform>-->
-<!--                    </transform>-->
-<!--                </transform>-->
-<!--            </group>-->
-
             <Viewpoint
                     description="defaultX3DViewpointNode"
                     id="viewpoint"
@@ -69,12 +30,20 @@
                     zFar="5000"
                     zNear="0">
             </Viewpoint>
-            <!--            <navigationInfo type='"fly" "any"' id="navType"></navigationInfo>-->
         </scene>
     </x3d>
 </div>
 
-
+<div id="position_overlay">
+    <h2>Yaw</h2>
+    <p id="yaw">
+        Current Yaw Path:
+    </p>
+    <h2>Pitch</h2>
+    <p id="pitch">
+        Current Pitch:
+    </p>
+</div>
 <div id="CameraControl_Container">
     <button id="birds_eye">
         up

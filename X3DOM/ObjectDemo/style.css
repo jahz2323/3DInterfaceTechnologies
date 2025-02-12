@@ -1,0 +1,13 @@
+body{
+    background: gray;
+}
+#content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    x3d{
+        border: black 1px solid;
+        background: antiquewhite;
+    }
+}

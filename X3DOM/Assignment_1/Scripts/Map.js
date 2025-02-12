@@ -2,7 +2,7 @@ function initalize_borders(document) {
     console.log("Creating the floor");
     let border_arr = [];
     let rotation_param = ["1 0 0 -1.57", "0 1 0 0", "0 1 0 1.57", "1 0 0 1.57"];
-    let translation_param = ["0 -500 0", "0 0 -500", "-500 0 0", "0 500 0 "];
+    let translation_param = ["0 -1000 0", "0 0 -1000", "-1000 0 0", "0 1000 0 "];
 
     for (let i = 0; i < rotation_param.length; i++) {
         let transform = document.createElement("Transform");
@@ -11,12 +11,12 @@ function initalize_borders(document) {
         let ImageTexture = document.createElement("ImageTexture");
         let material = document.createElement("material");
 
-        material.setAttribute("diffuseColor", "0.68 0.85 .9");
+        material.setAttribute("diffuseColor", "0 0 .1");
         ImageTexture.setAttribute("url", "../Textures/glowing-shimmering-stars-space-abstract-background_250994-1378.png");
-        appearance.appendChild(ImageTexture);
+        appearance.appendChild(material);
 
         let Rectangle = document.createElement("Rectangle2D");
-        Rectangle.setAttribute("size", "1200 1200", "solid", "true");
+        Rectangle.setAttribute("size", "2000 2000", "solid", "true");
 
         transform.setAttribute("translation", translation_param[i]);
         transform.setAttribute("rotation", rotation_param[i]);
