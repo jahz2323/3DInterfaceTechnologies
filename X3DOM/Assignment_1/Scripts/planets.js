@@ -7,14 +7,14 @@ function initalize_planets(document) {
 }
 
 function planets(document){
-    saturn(document);
-    sun(document);
-    earth(document);
-    mars(document);
+    // saturn(document);
+    // sun(document);
+    // earth(document);
+    // mars(document);
     console.log("Creating the planets");
 }
 
-let saturn_position = ["-50 200 -100"];
+let saturn_position = ["10 0 -200"];
 let sun_position = ["-200 -250 400"];
 let earth_position = ["-100 0 0"];
 let mars_position = ["-150 0 0"];
@@ -33,7 +33,7 @@ function mars(document) {
     appearance.appendChild(material);
 
     let sphere = document.createElement("sphere");
-    sphere.setAttribute("radius", "10");
+    sphere.setAttribute("radius", "5");
     sphere.setAttribute("solid", "true");
 
     shape.appendChild(appearance);
@@ -56,7 +56,7 @@ function earth(document) {
     appearance.appendChild(material);
 
     let sphere = document.createElement("sphere");
-    sphere.setAttribute("radius", "10");
+    sphere.setAttribute("radius", "5");
     sphere.setAttribute("solid", "true");
 
     shape.appendChild(appearance);
@@ -113,7 +113,7 @@ function saturn(document) {
     appearance.appendChild(material);
 
     let sphere = document.createElement("sphere");
-    sphere.setAttribute("radius", "50");
+    sphere.setAttribute("radius", "25");
     sphere.setAttribute("solid", "true");
 
     shape.appendChild(appearance);
@@ -129,8 +129,8 @@ function saturn(document) {
     ringGroup.setAttribute("rotation", "1 0 0 1.57");
 
     let numPoints = 200; // Number of segments in the ring
-    let insideRadius = 90;
-    let outsideRadius = 120;
+    let insideRadius = 50;
+    let outsideRadius = 100;
     let centerPoint = "0 0 0"; // Central anchor
 
     let points = [];
@@ -168,7 +168,7 @@ function rotateRings(document) {
 
     function animate() {
         angle += 5; // Increase rotation speed
-        rings.setAttribute("rotation", `0 0 1 ${-angle * (Math.PI / 180)}`); // Convert to radians
+        rings.setAttribute("rotation", `0 0 1 ${angle * (Math.PI / 180)}`); // Convert to radians
         requestAnimationFrame(animate);
     }
 

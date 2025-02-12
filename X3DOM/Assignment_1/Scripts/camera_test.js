@@ -55,22 +55,22 @@
 // let heading = 0;
 
 document.getElementById("birds_eye").addEventListener("click", function () {
-    update_camera("up");
+    Change_Orientation("up");
 });
 
 document.getElementById("bottom_up").addEventListener("click", function () {
-    update_camera("down");
+    Change_Orientation("down");
 });
 
 document.getElementById("left_view").addEventListener("click", function () {
-    update_camera("left");
+    Change_Orientation("left");
 });
 
 document.getElementById("right_view").addEventListener("click", function () {
-    update_camera("right");
+    Change_Orientation("right");
 });
 
-function update_camera(direction) {
+function Change_Orientation(direction) {
     console.log("Camera moved: " + direction);
     switch (direction) {
         case "up":
@@ -94,5 +94,5 @@ function update_camera(direction) {
 }
 
 export {
-    update_camera
+    Change_Orientation
 }
