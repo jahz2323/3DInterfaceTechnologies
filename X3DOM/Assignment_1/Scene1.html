@@ -11,29 +11,24 @@
         import {initalize_ship} from "../Assignment_1/Scripts/ship.js";
         import {Change_Orientation} from "./Scripts/camera_test.js";
         import {initalize_planets} from "./Scripts/planets.js";
-
-        initalize_borders(document);
+        //
+        // initalize_borders(document);
         initalize_ship(document);
         initalize_planets(document);
+        document.body.style.overflow = "hidden";
     </script>
 </head>
 <body onload=main() style="background: #3a3a3a">
 <h1 style="color: #fff; text-align: center">Space Fighter</h1>
-<div id="content" style="width: 100%;">
-    <x3d disableKeys="true" height="700px"  width="800px">
-        <scene id="scene">
-            <Viewpoint
-                    description="defaultX3DViewpointNode"
-                    id="viewpoint"
-                    orientation="0 0 0 0"
-                    position="0 20 100"
-                    zFar="5000"
-                    zNear="0">
-            </Viewpoint>
-        </scene>
-    </x3d>
+<!-- Mouse Tracking Area -->
+<div id="mouseTracker">
+    <svg id="crosshairSVG">
+        <circle cx="400" cy="350" r="40" stroke="green" stroke-width="2" fill="none"/>
+<!--        <line x1="50" y1="10" x2="50" y2="90" style="stroke:white;stroke-width:3"/>-->
+<!--        <line x1="10" y1="50" x2="90" y2="50" style="stroke:white;stroke-width:3"/>-->
+    </svg>
 </div>
-
+<!-- Overlay for Position -->
 <div id="position_overlay">
     <h2>Yaw</h2>
     <p id="yaw">
@@ -44,6 +39,9 @@
         Current Pitch:
     </p>
 </div>
+
+
+<!-- Camera Controls -->
 <div id="CameraControl_Container">
     <button id="birds_eye">
         up
@@ -57,7 +55,39 @@
     <button id="right_view">
         right
     </button>
+</div>
 
+
+<div id="content" style="width: 100%;">
+    <x3d disableKeys="true" height="700px"  width="800px">
+        <scene id="scene">
+            <Viewpoint
+                    description="defaultX3DViewpointNode"
+                    id="viewpoint"
+                    orientation="0 0 0 0"
+                    position="0 20 100"
+                    zFar="5000"
+                    zNear="0">
+            </Viewpoint>
+            <NavigationInfo
+                    headlight="true"
+                    id="NavigationInfo"
+                    speed="1"
+                    type="EXAMINE">
+            </NavigationInfo>
+            <Background
+                    skyColor="0 0 0"    groundColor="0 0 0">
+            </Background>
+
+        </scene>
+    </x3d>
+</div>
+
+<div id="log">
+    <h2>Log</h2>
+    <p id="log_text">
+        Log:
+    </p>
 </div>
 </body>
 <script src="main.js"></script>

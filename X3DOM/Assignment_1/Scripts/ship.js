@@ -27,8 +27,7 @@ function createAccelerator(document, translation) {
     let shape = document.createElement("shape");
     let appearance = document.createElement("appearance");
     let material = document.createElement("material");
-    material.setAttribute("diffuseColor", "1 0 0");
-    material.setAttribute("emissiveColor", "0 .2 0");
+    material.setAttribute("diffuseColor", "0.0 0 0.05");
     appearance.appendChild(material);
 
     let cone = document.createElement("Cone");
@@ -50,13 +49,13 @@ function createLaserBarrel(document, translation) {
     barrelGroup.setAttribute("translation", translation);
     barrelGroup.setAttribute("rotation", "1 0 0 1.57"); // Rotate to point forward
 
+    // Create the laser barrel shape
     let shape = document.createElement("shape");
     let appearance = document.createElement("appearance");
     let material = document.createElement("material");
-    material.setAttribute("diffuseColor", "1 0 0"); // Red color
-    material.setAttribute("emissiveColor", "0.8 0 0"); // Glow effect
-    appearance.appendChild(material);
+    material.setAttribute("diffuseColor", "0.25 0.25 0.25"); // Dark grey barrel
 
+    appearance.appendChild(material);
     let cylinder = document.createElement("Cylinder");
     cylinder.setAttribute("height", "5"); // Barrel length
     cylinder.setAttribute("radius", "1.2"); // Barrel thickness
@@ -65,8 +64,20 @@ function createLaserBarrel(document, translation) {
     shape.appendChild(cylinder);
     barrelGroup.appendChild(shape);
 
+    // Add a PointLight to simulate a laser glow
+    let pointLight = document.createElement("PointLight");
+    pointLight.setAttribute("rotation", "1 0 0 1.57"); // Rotate to point forward
+    pointLight.setAttribute("on", "TRUE");
+    pointLight.setAttribute("intensity", "1"); // Brightness
+    pointLight.setAttribute("color", "1 0 0"); // Red light
+    pointLight.setAttribute("location", "0 0 5"); // Slightly in front of the barrel
+    pointLight.setAttribute("radius", "10"); // Light spread radius
+
+    barrelGroup.appendChild(pointLight); // Attach the light to the barrel
+
     return barrelGroup;
 }
+
 
 function ship(document) {
     let scene = document.getElementById("scene");
@@ -74,60 +85,60 @@ function ship(document) {
     shipGroup.setAttribute("translation", "0 0 0");
 
     let shapes = [
-        ["0 0 1", "0 .2 0", "-1.5 0 0 1.5 0 0 0 0 -1"],
-        ["0 1 0", "0 .2 0", "-4 0 0 4 0 0 0 0 5"],
-        ["0 1 0", "0 .2 0", "0 5 5 4 0 0 -4 0 0"],
-        ["0 1 0", "0 .2 0", "0 0 5 4 0 0 0 5 5"],
-        ["0 1 0", "0 .2 0", "0 0 5 0 5 5 -4 0 0"],
-        ["0 1 0", "0 .2 0", "1.5 0 2.5 4 0 0 10 0 2.5"],
-        ["0 0 1", "0 .2 0", "3 1 1 2 0 2.5 10 0 2.5"],
-        ["1 0 0", "0 .2 0", "4 0 0 3 1 1 10 0 2.5"],
-        ["0 1 0", "0 .2 0", "-4 0 0 -1.5 0 2.5 -10 0 2.5"],
-        ["0 0 1", "0 .2 0", "-2 0 2.5 -3 1 1 -10 0 2.5"],
-        ["1 0 0", "0 .2 0", "-3 1 1 -4 0 0 -10 0 2.5"],
+        ["0.25 0.25 0.25", "0 0 0 ", "-1.5 0 0 1.5 0 0 0 0 -1"],
+        ["0.25 0.25 0.25", "0 0 0 ", "-4 0 0 4 0 0 0 0 5"],
+        ["0.25 0.25 0.25", "0 0 0 ", "0 5 5 4 0 0 -4 0 0"],
+        ["0.25 0.25 0.25", "0 0 0 ", "0 0 5 4 0 0 0 5 5"],
+        ["0.25 0.25 0.25", "0 0 0 ", "0 0 5 0 5 5 -4 0 0"],
+        ["0.25 0.25 0.25", "0 0 0 ", "1.5 0 2.5 4 0 0 10 0 2.5"],
+        ["0.25 0.25 0.25", "0 0 0 ", "3 1 1 2 0 2.5 10 0 2.5"],
+        ["0.25 0.25 0.25", "0 0 0 ", "4 0 0 3 1 1 10 0 2.5"],
+        ["0.25 0.25 0.25", "0 0 0 ", "-4 0 0 -1.5 0 2.5 -10 0 2.5"],
+        ["0.25 0.25 0.25", "0 0 0 ", "-2 0 2.5 -3 1 1 -10 0 2.5"],
+        ["0.25 0.25 0.25", "0 0 0 ", "-3 1 1 -4 0 0 -10 0 2.5"],
 
-        ["0 1 0", "0 .2 0", "-3.5 -1 0 3.5 -1 0   0 -1 -5"],
-        ["0 0 1", "0 .2 0", "0 -1 -5 -0 -1 -5 3.5 -1 0"],
+        ["0.25 0.25 0.25", "0 0 0 ", "-3.5 -1 0 3.5 -1 0   0 -1 -5"],
+        ["0.25 0.25 0.25", "0 0 0 ", "0 -1 -5 -0 -1 -5 3.5 -1 0"],
         //front section
-        ["1 0 0", "0 .2 0", "3.5 -1 0  1.5 2 0  0.5 -1 -5"],
-        ["1 0 0", "0 .2 0", "0.5 -1 -5 1.5 2 0  3.5 -1 0"],
+        ["0.25 0.25 0.25", "0 0 0 ", "3.5 -1 0  1.5 2 0  0.5 -1 -5"],
+        ["0.25 0.25 0.25", "0 0 0 ", "0.5 -1 -5 1.5 2 0  3.5 -1 0"],
 
-        ["0 0 1", "0 .2 0", "-3.5 -1 0  -1.5 2 0  -0.5 -1 -5"],
-        ["0 0 1", "0 .2 0", "-0.5 -1 -5 -1.5 2 0  -3.5 -1 0"],
+        ["0.25 0.25 0.25", "0 0 0 ", "-3.5 -1 0  -1.5 2 0  -0.5 -1 -5"],
+        ["0.25 0.25 0.25", "0 0 0 ", "-0.5 -1 -5 -1.5 2 0  -3.5 -1 0"],
 
         //Front section connection to main body
-        ["0 1 0", "0 .2 0", "3.5 -1 0  1.5 2 0  0 5 5"],
-        ["0 1 0", "0 .2 0", "0 5 5 1.5 2 0  3.5 -1 0"],
+        ["0.25 0.25 0.25", "0 0 0 ", "3.5 -1 0  1.5 2 0  0 5 5"],
+        ["0.25 0.25 0.25", "0 0 0 ", "0 5 5 1.5 2 0  3.5 -1 0"],
 
-        ["0 1 0", "0 .2 0", "-3.5 -1 0  -1.5 2 0  0 5 5"],
-        ["0 1 0", "0 .2 0", "0 5 5 -1.5 2 0  -3.5 -1 0"],
+        ["0.25 0.25 0.25", "0 0 0 ", "-3.5 -1 0  -1.5 2 0  0 5 5"],
+        ["0.25 0.25 0.25", "0 0 0 ", "0 5 5 -1.5 2 0  -3.5 -1 0"],
 
         // //windows above connection to main body
-        ["0 0 1", "0 .2 0", "1.5 2 0 -1.5 2 0 0 5 5"],
+        ["0.25 0.25 0.25", "0 0 0 ", "1.5 2 0 -1.5 2 0 0 5 5"],
 
         //cover barrel
-        ["0 .3 0", "0 .2 0", "1.5 2 0 0 1 -2 0 2 0"],
-        ["0 .3 0", "0 .2 0", "0 1 -2 -1.5 2 0 0 2 0"],
-        ["0 .3 0", "0 .2 0", "0 1 -2 1.5 2 0 0 2 0"],
-        ["0 .3 0", "0 .2 0", "-1.5 2 0 0 1 -2 0 2 0"],
+        ["0.25 0.25 0.25", "0 0 0 ", "1.5 2 0 0 1 -2 0 2 0"],
+        ["0.25 0.25 0.25", "0 0 0 ", "0 1 -2 -1.5 2 0 0 2 0"],
+        ["0.25 0.25 0.25", "0 0 0 ", "0 1 -2 1.5 2 0 0 2 0"],
+        ["0.25 0.25 0.25", "0 0 0 ", "-1.5 2 0 0 1 -2 0 2 0"],
 
         //connect  front section with cover barrel
-        ["1 0 0", "0 .5 0.1", "1.35 .75 -2 0 1 -2 1.5 2 0"],
-        ["1 0 0", "0 .5 0.1", "0 1 -2 -1.35 .75 -2  -1.5 2 0"],
+        ["0.25 0.25 0.25", "0 0 0", "1.35 .75 -2 0 1 -2 1.5 2 0"],
+        ["0.25 0.25 0.25", "0 0 0", "0 1 -2 -1.35 .75 -2  -1.5 2 0"],
 
         //cover bottom of ship
-        ["0 1 0", "0 .2 0", "4 -1 0 -4 -1 0 0 -1 -5"],
+        ["0.25 0.25 0.25", "0 0 0 ", "4 -1 0 -4 -1 0 0 -1 -5"],
         //mirror
-        ["0 1 0", "0 .2 0", "4 -1 0 0 -1 -5 -4 -1 0"],
+        ["0.25 0.25 0.25", "0 0 0 ", "4 -1 0 0 -1 -5 -4 -1 0"],
         //behind barrel fix
-        ["0 0 1", "0 .2 0", "-3.7 -1 0 .5 -1 0 0 2 0"],
+        ["0.25 0.25 0.25", "0 0 0 ", "-3.7 -1 0 .5 -1 0 0 2 0"],
         //mirror
-        ["0 0 1", "0 .2 0", "-.5 -1 0 3.7 -1 0 0 2 0 "],
+        ["0.25 0.25 0.25", "0 0 0 ", "-.5 -1 0 3.7 -1 0 0 2 0 "],
 
         //fix back-face
-        ["0 0 1", "0 .2 0", "3.7 -1 0 -.5 -1 0 0 2 0 "],
+        ["0.25 0.25 0.25", "0 0 0 ", "3.7 -1 0 -.5 -1 0 0 2 0 "],
         //mirror
-        ["0 0 1", "0 .2 0", ".5 -1 0 -3.7 -1 0 0 2 0 "],
+        ["0.25 0.25 0.25", "0 0 0 ", ".5 -1 0 -3.7 -1 0 0 2 0 "],
 
 
     ];
@@ -144,13 +155,18 @@ function ship(document) {
     let yaw_transform = document.createElement("transform");
     let pitch_transform = document.createElement("transform");
     let roll_transform = document.createElement("transform");
+    let ship_transform = document.createElement("transform");
     pitch_transform.setAttribute("id", "pitchTransform");
     yaw_transform.setAttribute("id", "yawTransform");
     roll_transform.setAttribute("id", "rollTransform");
+    ship_transform.setAttribute("id", "shipTransform");
+
+
     yaw_transform.appendChild(shipGroup);
     pitch_transform.appendChild(yaw_transform);
     roll_transform.appendChild(pitch_transform);
-    scene.appendChild(roll_transform);
+    ship_transform.appendChild(roll_transform);
+    scene.appendChild(ship_transform);
 }
 
 

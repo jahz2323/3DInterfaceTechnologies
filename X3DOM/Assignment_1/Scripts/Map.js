@@ -11,17 +11,15 @@ function initalize_borders(document) {
         let ImageTexture = document.createElement("ImageTexture");
         let material = document.createElement("material");
 
-        material.setAttribute("diffuseColor", "0 0 .1");
+        material.setAttribute("diffuseColor", "0 0 0");
         ImageTexture.setAttribute("url", "../Textures/glowing-shimmering-stars-space-abstract-background_250994-1378.png");
-        appearance.appendChild(material);
+        appearance.appendChild(ImageTexture);
 
         let Rectangle = document.createElement("Rectangle2D");
         Rectangle.setAttribute("size", "2000 2000", "solid", "true");
 
         transform.setAttribute("translation", translation_param[i]);
         transform.setAttribute("rotation", rotation_param[i]);
-        console.log("current rotation object: " + transform.getAttribute("rotation"));
-        console.log(rotation_param[i]);
 
         shape.append(appearance);
         shape.append(Rectangle);
