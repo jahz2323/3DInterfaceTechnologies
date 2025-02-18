@@ -1,21 +1,22 @@
 import {createAmmoBox, boxRadius, shipRadius, ammoBoxes} from "./Scripts/AmmoBox.js";
-import {Planet_Arr}   from "./Scripts/planets.js";
+import {Planet_Arr, createPlanets} from "./Scripts/planets.js";
+import {check_Group} from "./Scripts/click_interactions.js";
 
 let scene = document.getElementById("scene");
 
 
 //console.logs to html
-(function (){
+(function () {
     let old = console.log;
     let logger = document.getElementById('log');
-    console.log = function(message){
+    console.log = function (message) {
         if (typeof message == 'object') {
             logger.innerHTML = (JSON && JSON.stringify ? JSON.stringify(message) : message) + '<br />';
         } else {
             logger.innerHTML = message + '<br />';
         }
     }
-}) ();
+})();
 
 function main() {
     scene = document.getElementById("scene");
@@ -56,7 +57,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const zDisplay = document.getElementById("z");
 
     // Initialize positional variables
-    let shipPos = { x: 0, y: 0, z: 0 }; // Initial ship position
+    let shipPos = {x: 0, y: 0, z: 0}; // Initial ship position
+    let prevYaw = 0; // Previous yaw for roll calculation
     let yaw = 0; // Variable to store the yaw of the ship
     let pitch = 0; // Variable to store the pitch of the ship
     let speed = 0; // Variable to store the speed of the ship
@@ -78,21 +80,24 @@ document.addEventListener("DOMContentLoaded", () => {
     //game variables
     let ammo = 50; // Initial ammo count
     let ammo_regain = 0.1; // Ammo regain rate
-
     let health = 100; // Initial health
-
     let score = 0; // Initial score
+
+    //toggle state
+    let planetsVisible = true;
+    let ammoVisible = true;
+
     function GameState() {
         AmmoCheck();
         HealthCheck();
         ScoreCheck();
     }
 
-    function ScoreCheck(){
+    function ScoreCheck() {
         document.getElementById("score").textContent = "Score: " + score;
     }
 
-    function HealthCheck(){
+    function HealthCheck() {
         document.getElementById("health").textContent = "Health: " + health;
         if (health <= 0) {
             console.log("Game Over");
@@ -101,9 +106,9 @@ document.addEventListener("DOMContentLoaded", () => {
         return true;
     }
 
-    function AmmoCheck(){
+    function AmmoCheck() {
         document.getElementById("ammo").textContent = "Ammo: " + ammo;
-        if (ammo <= 0 ){
+        if (ammo <= 0) {
             console.log("Out of Ammo");
             return false
         }
@@ -111,9 +116,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Fire projectile on key press
-    addEventListener("keypress", (event) =>{
+    addEventListener("keypress", (event) => {
         if (event.key === "f") {
-            if (AmmoCheck()){
+            if (AmmoCheck()) {
                 //play audio
                 let audio = new Audio("../Assignment_1/Audio/blaster.wav");
                 audio.volume = 0.01;
@@ -122,13 +127,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 //fire projectile
                 fireProjectile(yaw, pitch);
                 ammo -= 1;
-            }
-            else{
+            } else {
                 console.log("Out of Ammo");
             }
 
         }
-        if(event.key === "v"){
+        if (event.key === "v") {
             //change to first person flight;
             //change the viewpoint to the ship
             FirstPerson = !FirstPerson;
@@ -186,10 +190,6 @@ document.addEventListener("DOMContentLoaded", () => {
         ship_orientation(yaw, pitch, roll, shipPos);
     });
 
-
-
-    let prevYaw = 0;
-
     function ship_orientation(yaw, pitch, shipPos) {
         let Ship_yawTransform = document.getElementById("yawTransform");
         let Ship_pitchTransform = document.getElementById("pitchTransform");
@@ -214,10 +214,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         prevYaw = yaw;
-
-        xDisplay.innerHTML = `X: ${shipPos.x.toFixed(2)}`;
-        yDisplay.innerHTML = `Y: ${shipPos.y.toFixed(2)}`;
-        zDisplay.innerHTML = `Z: ${shipPos.z.toFixed(2)}`;
     }
 
 
@@ -289,10 +285,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function updateShipPosition() {
 
-
         // Update ship position based on yaw and pitch
         let forwardVector = {
-            x:  Math.sin(yaw) * Math.cos(pitch),
+            x: Math.sin(yaw) * Math.cos(pitch),
             y: -Math.sin(pitch),
             z: -Math.cos(yaw) * Math.cos(pitch),
         };
@@ -336,9 +331,11 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             console.error("shipTransform element not found!");
         }
+        xDisplay.textContent = `X: ${shipPos.x.toFixed(2)}`;
+        yDisplay.textContent = `Y: ${shipPos.y.toFixed(2)}`;
+        zDisplay.textContent = `Z: ${shipPos.z.toFixed(2)}`;
 
     }
-
 
 
     // Keyboard Event Listeners
@@ -390,9 +387,8 @@ document.addEventListener("DOMContentLoaded", () => {
         parent_node.appendChild(projectileTransform);
 
 
-
         // **Set projectile's initial position to the ship's CURRENT position**
-        let projectileStartPos = { ...shipPos }; // Copy ship's position at time of firing
+        let projectileStartPos = {...shipPos}; // Copy ship's position at time of firing
         projectileTransform.setAttribute("translation", `${projectileStartPos.x} ${projectileStartPos.y} ${projectileStartPos.z}`);
 
         // **Calculate projectile movement direction (based on ship's yaw & pitch)**
@@ -414,7 +410,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Store projectile data
         projectiles.push({
             element: projectileTransform,
-            position: { ...projectileStartPos }, // Clone starting position
+            position: {...projectileStartPos}, // Clone starting position
             velocity: {
                 x: forwardVector.x * projectileSpeed,
                 y: forwardVector.y * projectileSpeed,
@@ -422,6 +418,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+
     //check for collisions
     function checkShipCollision(shipPos) {
         //check for planets collision
@@ -438,9 +435,12 @@ document.addEventListener("DOMContentLoaded", () => {
             let distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
             if (distance < shipRadius + planetRadius) {
-                console.log("Collision detected with planet at:", x, y, z);
+                console.log("Collision detected with planet at: " +
+                    `${x.toFixed(2)}  
+                    ${y.toFixed(2)} 
+                    ${z.toFixed(2)}`);
                 let audio = new Audio("../Assignment_1/Audio/crash.mp3");
-                audio.volume = 0.03;
+                audio.volume = 0.1;
                 audio.play();
 
                 //reset ship position
@@ -464,13 +464,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (distance < shipRadius + boxRadius) {
                 console.log("Collision detected with ammo box at:"
-                    +`${box.x.toFixed(2)}
-                    +${box.y.toFixed(2)}
-                    +${box.z.toFixed(2)}`);
+                    + `${box.x.toFixed(2)}
+                    ${box.y.toFixed(2)}
+                    ${box.z.toFixed(2)}`);
                 ammoBoxes.splice(i, 1);
                 box.element.remove();
                 i--;
                 ammo += 10;
+                score += 100;
 
                 let audio = new Audio("../Assignment_1/Audio/collect.wav");
                 audio.volume = 0.5;
@@ -481,6 +482,50 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    function checktoggles(){
+        if(!ammoVisible){
+            let ammoGroup = document.getElementById("ammoGroup");
+            if(ammoGroup){
+                ammoGroup.setAttribute("render", "false");
+                ammoGroup.remove();
+                return;
+            }
+            else{
+                createAmmoBox();
+                ammoVisible = !ammoVisible;
+                return;;
+            }
+            ammoVisible = !ammoVisible;
+        }
+
+
+        if(!planetsVisible){
+            let planetGroup = document.getElementById("planetGroup");
+            if(planetGroup){
+                planetGroup.setAttribute("render", "false");
+                planetGroup.remove();
+                return;
+            }
+            else{
+                createPlanets();
+                ammoVisible = !ammoVisible;
+                return;;
+            }
+        }
+    }
+
+    document.querySelector("#toggle button:nth-child(1)").addEventListener("click", () => {
+        planetsVisible = !planetsVisible;
+        console.log("Planets visibility:", planetsVisible);
+        checktoggles();
+    });
+
+    document.querySelector("#toggle button:nth-child(2)").addEventListener("click", () => {
+        ammoVisible = !ammoVisible;
+        console.log("Ammo visibility:", ammoVisible);
+        checktoggles();
+    });
+
 
     // Game loop for smooth updates
     function gameLoop() {
@@ -489,16 +534,12 @@ document.addEventListener("DOMContentLoaded", () => {
         GameState(); // Check game state
         requestAnimationFrame(gameLoop);
     }
+
+    check_Group();
     gameLoop();
-});
-
-
-
-// Start update loop when DOM is loaded
-document.addEventListener("DOMContentLoaded", () => {
-    console.log("Page fully loaded, initializing...");
 
 });
+
 
 let projectiles = []; // Store active projectiles
 const maxProjectiles = 100; // Limit projectiles
@@ -533,6 +574,7 @@ function projectile_update() {
 
     window.requestAnimationFrame(projectile_update);
 }
+
 window.requestAnimationFrame(projectile_update);
 
 

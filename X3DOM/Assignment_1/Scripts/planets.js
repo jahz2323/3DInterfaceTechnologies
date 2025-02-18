@@ -12,6 +12,16 @@ saturn 10759days
 uranus 30687days
 neptune 60190days
  */
+export function createPlanets(){
+    saturn(document);
+    sun(document);
+    earth(document);
+    mars(document);
+    jupiter(document);
+    uranus(document);
+    neptune(document);
+}
+
 function planets(document) {
     saturn(document);
     sun(document);
@@ -37,7 +47,7 @@ let mars_position = ["1000 -600 -3000"];
 let jupiter_position = ["3000 700 -2000"];
 let saturn_position = ["2000 -400 -1000"];
 let uranus_position = ["-1600 0 0"];
-let neptune_position = ["-10 1000 1000"];
+let neptune_position = ["-100 500 -100"];
 
 //planet periods
 let mercury_period = 88;
@@ -49,18 +59,26 @@ let saturn_period = 10759;
 let uranus_period = 30687;
 let neptune_period = 60190;
 
-
+let planetGroup = document.createElement("group")
+planetGroup.setAttribute("id", "planetGroup");
 
 function neptune(document) {
     let scene = document.getElementById("scene");
-    let planetGroup = document.createElement("transform");
-    planetGroup.setAttribute("translation", `${neptune_position}`);
+    let planet = document.createElement("transform");
+    planet.setAttribute("id", "neptune");
+    planet.setAttribute("translation", `${neptune_position}`);
+
+    let rotating = document.createElement("transform");
+    rotating.setAttribute("id", "neptuneRotation");
 
     let shape = document.createElement("shape");
     let appearance = document.createElement("appearance");
+    let ImageTexture = document.createElement("ImageTexture");
+    ImageTexture.setAttribute("url", "../Assignment_1/Textures/neptune.jpg");
     let material = document.createElement("material");
     material.setAttribute("diffuseColor", "0 0 0.5");
     appearance.appendChild(material);
+    appearance.appendChild(ImageTexture);
 
     let sphere = document.createElement("sphere");
     sphere.setAttribute("radius", `${neptune_radius}`);
@@ -69,20 +87,32 @@ function neptune(document) {
     shape.appendChild(appearance);
     shape.appendChild(sphere);
 
-    planetGroup.appendChild(shape);
+    rotating.appendChild(shape);
+    planet.appendChild(rotating);
+
+    planetGroup.appendChild(planet);
     scene.appendChild(planetGroup);
 }
 
 function uranus(document) {
     let scene = document.getElementById("scene");
-    let planetGroup = document.createElement("transform");
-    planetGroup.setAttribute("translation", `${uranus_position}`);
+    let planet = document.createElement("transform");
+
+    planet.setAttribute("id", "uranus");
+    planet.setAttribute("translation", `${uranus_position}`);
+
+    let rotating = document.createElement("transform");
+    rotating.setAttribute("id", "uranusRotation");
 
     let shape = document.createElement("shape");
     let appearance = document.createElement("appearance");
+
+    let ImageTexture = document.createElement("ImageTexture");
+    ImageTexture.setAttribute("url", "../Assignment_1/Textures/uranus.jpeg");
     let material = document.createElement("material");
     material.setAttribute("diffuseColor", "0 0.5 0.5");
     appearance.appendChild(material);
+    appearance.appendChild(ImageTexture);
 
     let sphere = document.createElement("sphere");
     sphere.setAttribute("radius", `${uranus_radius}`);
@@ -91,20 +121,31 @@ function uranus(document) {
     shape.appendChild(appearance);
     shape.appendChild(sphere);
 
-    planetGroup.appendChild(shape);
+    rotating.appendChild(shape);
+    planet.appendChild(rotating);
+
+    planetGroup.appendChild(planet);
     scene.appendChild(planetGroup);
 }
 
 function jupiter(document) {
     let scene = document.getElementById("scene");
-    let planetGroup = document.createElement("transform");
-    planetGroup.setAttribute("translation", `${jupiter_position}`);
+    let planet = document.createElement("transform");
+
+    planet.setAttribute("id", "jupiter");
+    planet.setAttribute("translation", `${jupiter_position}`);
+
+    let rotating = document.createElement("transform");
+    rotating.setAttribute("id", "jupiterRotation");
 
     let shape = document.createElement("shape");
     let appearance = document.createElement("appearance");
+    let ImageTexture = document.createElement("ImageTexture");
+    ImageTexture.setAttribute("url", "../Assignment_1/Textures/jupiter.jpeg");
     let material = document.createElement("material");
     material.setAttribute("diffuseColor", "0.5 0.5 0.5");
     appearance.appendChild(material);
+    appearance.appendChild(ImageTexture);
 
     let sphere = document.createElement("sphere");
     sphere.setAttribute("radius", `${jupiter_radius}`);
@@ -113,20 +154,31 @@ function jupiter(document) {
     shape.appendChild(appearance);
     shape.appendChild(sphere);
 
-    planetGroup.appendChild(shape);
+    rotating.appendChild(shape);
+    planet.appendChild(rotating);
+
+    planetGroup.appendChild(planet);
     scene.appendChild(planetGroup);
 }
 
 function mars(document) {
     let scene = document.getElementById("scene");
-    let planetGroup = document.createElement("transform");
-    planetGroup.setAttribute("translation", `${mars_position}`);
+    let planet = document.createElement("transform");
+
+    planet.setAttribute("id" , "mars");
+    planet.setAttribute("translation", `${mars_position}`);
+
+    let rotating = document.createElement("transform");
+    rotating.setAttribute("id", "marsRotation");
 
     let shape = document.createElement("shape");
     let appearance = document.createElement("appearance");
+    let ImageTexture = document.createElement("ImageTexture");
+    ImageTexture.setAttribute("url", "../Assignment_1/Textures/mars.jpeg");
     let material = document.createElement("material");
     material.setAttribute("diffuseColor", "0.2 0 0");
     appearance.appendChild(material);
+    appearance.appendChild(ImageTexture);
 
     let sphere = document.createElement("sphere");
     sphere.setAttribute("radius", `${mars_radius}`);
@@ -135,20 +187,32 @@ function mars(document) {
     shape.appendChild(appearance);
     shape.appendChild(sphere);
 
-    planetGroup.appendChild(shape);
+    rotating.append(shape);
+    planet.appendChild(rotating);
+
+    planetGroup.appendChild(planet);
     scene.appendChild(planetGroup);
 }
 
 function earth(document) {
     let scene = document.getElementById("scene");
-    let planetGroup = document.createElement("transform");
-    planetGroup.setAttribute("translation", `${earth_position}`);
+    let planet = document.createElement("transform");
+
+    planet.setAttribute("id", "earth");
+    planet.setAttribute("translation", `${earth_position}`);
+
+    let rotating = document.createElement("transform");
+    rotating.setAttribute("id", "earthRotation");
 
     let shape = document.createElement("shape");
     let appearance = document.createElement("appearance");
+
+    let ImageTexture = document.createElement("ImageTexture");
+    ImageTexture.setAttribute("url", "../Assignment_1/Textures/earth.jpeg");
     let material = document.createElement("material");
     material.setAttribute("diffuseColor", "0 0 1");
     appearance.appendChild(material);
+    appearance.appendChild(ImageTexture);
 
     let sphere = document.createElement("sphere");
     sphere.setAttribute("radius", ` ${earth_radius}`);
@@ -157,7 +221,10 @@ function earth(document) {
     shape.appendChild(appearance);
     shape.appendChild(sphere);
 
-    planetGroup.appendChild(shape);
+    rotating.appendChild(shape);
+    planet.appendChild(rotating);
+
+    planetGroup.appendChild(planet);
     scene.appendChild(planetGroup);
 }
 
@@ -168,18 +235,18 @@ function sun(document) {
         return;
     }
 
-    let planetGroup = document.createElement("transform");
-    planetGroup.setAttribute("id", "sunGroup");
-    planetGroup.setAttribute("translation", `${sun_position}`);
+    let planet = document.createElement("transform");
+    planet.setAttribute("id", "sun");
+    planet.setAttribute("translation", `${sun_position}`);
 
-    let rotatingGroup = document.createElement("transform");
-    rotatingGroup.setAttribute("id", "sunRotation");
+    let rotating = document.createElement("transform");
+    rotating.setAttribute("id", "sunRotation");
 
     let shape = document.createElement("shape");
     let appearance = document.createElement("appearance");
     let imageTexture = document.createElement("ImageTexture");
 
-    imageTexture.setAttribute("url", "../Textures/sun.png"); // Ensure the path is correct
+    imageTexture.setAttribute("url", "../Assignment_1/Textures/sun.png"); // Ensure the path is correct
     appearance.appendChild(imageTexture);
 
     let sphere = document.createElement("sphere");
@@ -189,8 +256,8 @@ function sun(document) {
     shape.appendChild(appearance);
     shape.appendChild(sphere);
 
-    rotatingGroup.appendChild(shape);
-    planetGroup.appendChild(rotatingGroup);
+    rotating.appendChild(shape);
+    planet.appendChild(rotating);
 
     // Adding a PointLight to simulate sunlight
     let SunLight = document.createElement("PointLight");
@@ -201,24 +268,33 @@ function sun(document) {
     SunLight.setAttribute("on", "true");
     SunLight.setAttribute("global", "true");
 
-    planetGroup.appendChild(SunLight);
+    planet.appendChild(SunLight);
+    planetGroup.appendChild(planet);
     scene.appendChild(planetGroup);
 
-    animateSun(document);
 }
 
 function saturn(document) {
     let scene = document.getElementById("scene");
-    let planetGroup = document.createElement("transform");
-    planetGroup.setAttribute("translation", `${saturn_position}`);
+    let planet = document.createElement("transform");
+    planet.setAttribute("id", "saturn");
+    planet.setAttribute("translation", `${saturn_position}`);
+
+    //rotating
+    let rotating = document.createElement("transform");
+    rotating.setAttribute("id", "saturnRotation");
 
     // Saturn's Planet Sphere
     let shape = document.createElement("shape");
     let appearance = document.createElement("appearance");
+
+    let ImageTexture = document.createElement("ImageTexture");
+    ImageTexture.setAttribute("url", "../Assignment_1/Textures/saturn.jpeg");
     let material = document.createElement("material");
     material.setAttribute("diffuseColor", "0 0.1 0.2"); // Dark blue
     material.setAttribute("emissiveColor", "0 0 0"); // Light grey
     appearance.appendChild(material);
+    appearance.appendChild(ImageTexture);
 
     let sphere = document.createElement("sphere");
     sphere.setAttribute("radius", `${saturn_radius}`);
@@ -226,37 +302,74 @@ function saturn(document) {
 
     shape.appendChild(appearance);
     shape.appendChild(sphere);
-    planetGroup.appendChild(shape);
+
+    rotating.appendChild(shape);
+    planet.appendChild(rotating);
+
+    planetGroup.appendChild(planet);
     scene.appendChild(planetGroup);
 
     // Saturn's Rings
-    let ringGroup = document.createElement("transform");
-    ringGroup.setAttribute("id", "rings");
-    ringGroup.setAttribute("translation", `${saturn_position}`);
-    ringGroup.setAttribute("rotation", "0 0 1 1.57");
+    let ring = document.createElement("transform");
+    ring.setAttribute("id", "rings");
+    ring.setAttribute("translation", `${saturn_position}`);
+    ring.setAttribute("rotation", "0 0 1 1.57");
 
+    //first ring
     let numPoints = 200;
-    let insideRadius = 500;
-    let outsideRadius = 900;
+    let insideRadius_1 = 500;
+    let outsideRadius_1 = 800;
 
-    let points = [];
-    let angleStep = 360 / numPoints;
+    //second ring
+    let insideRadius_2 = 900;
+    let outsideRadius_2 = 1000;
 
+    // array to store the points
+    let points_1 = [];
+    let points_2 = [];
+    let angleStep = 360 / numPoints; //angular spacing between points
+
+    //calculate points for inner and outer rings using the angle
+    // and the radius of the rings
+    //
     for (let i = 0; i <= numPoints; i++) {
-        let angle = i * angleStep;
+        let angle = i * angleStep; // Calculate the angle for the current point
         let rad = angle * (Math.PI / 180);
-        let outerX = Math.cos(rad) * outsideRadius;
-        let outerZ = Math.sin(rad) * outsideRadius;
-        let innerX = Math.cos(rad) * insideRadius;
-        let innerZ = Math.sin(rad) * insideRadius;
-        points.push(`${innerX} 0 ${innerZ}`);
-        points.push(`${outerX} 0 ${outerZ}`);
+
+        // Calculate the X and Z coordinates for the inner and outer points
+        /*
+        The X and Z coordinates are calculated using the formula:
+        X = R * cos(angle)
+        Y = 0
+        Z = R * sin(angle)
+
+        calculate points along circumference of the rings
+         */
+        let outerX = Math.cos(rad) * outsideRadius_1;
+        let outerZ = Math.sin(rad) * outsideRadius_1;
+        let innerX = Math.cos(rad) * insideRadius_1;
+        let innerZ = Math.sin(rad) * insideRadius_1;
+
+        let outerX_2 = Math.cos(rad) * outsideRadius_2;
+        let outerZ_2 = Math.sin(rad) * outsideRadius_2;
+        let innerX_2 = Math.cos(rad) * insideRadius_2;
+        let innerZ_2 = Math.sin(rad) * insideRadius_2;
+
+        //add to the points array
+        points_1.push(`${innerX} 0 ${innerZ}`);
+        points_1.push(`${outerX} 0 ${outerZ}`);
+
+        points_2.push(`${innerX_2} 0 ${innerZ_2}`);
+        points_2.push(`${outerX_2} 0 ${outerZ_2}`);
     }
 
     // Create the ring shape
-    let ringShape = createShape(document, "0 0 0.5", "0 0 1", points.join(" "));
-    ringGroup.appendChild(ringShape);
-    scene.appendChild(ringGroup);
+    let ringShape_1 = createShape(document, "0.6 0.6 .5", "0.4 0.4 .2", points_1.join(" "));
+    let ringShape_2 = createShape(document, "0.6 0.6 .5", "0.4 0.4 .2", points_2.join(" "));
+    ring.appendChild(ringShape_1);
+    ring.appendChild(ringShape_2);
+    scene.appendChild(ring);
+    scene.appendChild(ring);
 
     // Add a PointLight to the rings
     let ringLight = document.createElement("PointLight");
@@ -267,8 +380,8 @@ function saturn(document) {
     ringLight.setAttribute("radius", "500"); // Spread
     ringLight.setAttribute("on", "true");
 
-    ringGroup.appendChild(ringLight); // Attach light to rings
-
+    ring.appendChild(ringLight); // Attach light to rings
+    planetGroup.appendChild(ring);
     rotateRings(document);
 }
 
@@ -298,39 +411,46 @@ uranus 30687days
 neptune 60190days
 
  */
-function planetOrbits(){
-    let time = 0;
-    function updatePos(){
-        time += 0.1;
-        for (let i = 0; i < Planet_Arr.length; i++) {
-            let planet = Planet_Arr[i];
-            let pos = planet[0];
-            let radius = planet[1];
-            let x = pos[0];
-            let y = pos[1];
-            let z = pos[2];
-            let angle = time * (Math.PI / 180);
-            let newX = x + radius * Math.cos(angle);
-            let newY = y + radius * Math.sin(angle);
-            let newZ = z;
-            pos = [newX, newY, newZ];
 
-        }
-    }
+document.addEventListener("DOMContentLoaded", function () {
+    animatePlanets(document);
+});
 
-}
-
-function animateSun(document) {
+//timespeed - convert 1 day to 1s
+let orbit_velocity = 1;
+//animate planets by rotating transform nodes around y-axis
+function animatePlanets(document) {
     let sunRotation = document.getElementById("sunRotation");
-    let angle = 0;
+    let earthRotation = document.getElementById("earthRotation");
+    let marsRotation = document.getElementById("marsRotation");
+    let jupiterRotation = document.getElementById("jupiterRotation");
+    let saturnRotation = document.getElementById("saturnRotation");
+    let uranusRotation = document.getElementById("uranusRotation");
+    let neptuneRotation = document.getElementById("neptuneRotation");
 
-    function rotate() {
-        angle += 0.01; // Adjust speed (increase for faster rotation)
+    let earthTransform = document.getElementById("earth");
+    let marsTransform = document.getElementById("mars");
+    let jupiterTransform = document.getElementById("jupiter");
+    let saturnTransform = document.getElementById("saturn");
+    let uranusTransform = document.getElementById("uranus");
+    let neptuneTransform = document.getElementById("neptune");
+
+
+    let angle = 0;
+    function rotate(){
+        angle += 0.1;
         sunRotation.setAttribute("rotation", `0 1 0 ${angle * (Math.PI / 180)}`);
-        requestAnimationFrame(rotate);
+        earthRotation.setAttribute("rotation", `0 1 0 ${angle * (Math.PI / 180)}`);
+        marsRotation.setAttribute("rotation", `0 1 0 ${angle * (Math.PI / 180)}`);
+        jupiterRotation.setAttribute("rotation", `0 1 0 ${angle * (Math.PI / 180)}`);
+        saturnRotation.setAttribute("rotation", `0 1 0 ${angle * (Math.PI / 180)}`);
+        uranusRotation.setAttribute("rotation", `0 1 0 ${angle * (Math.PI / 180)}`);
+        neptuneRotation.setAttribute("rotation", `0 1 0 ${angle * (Math.PI / 180)}`);
+        requestAnimationFrame(rotate)
     }
 
     rotate();
+
 }
 
 
@@ -362,3 +482,34 @@ export let Planet_Arr = [ [saturn_position, saturn_radius],
     [neptune_position, neptune_radius]
 ];
 export {initalize_planets};
+
+
+/* TODO Orbitting planets - not part of Assignment 1 submission
+// function orbit(){
+    //     let earth_angle = 0;
+    //     let mars_angle = 0;
+    //     let jupiter_angle = 0;
+    //     let saturn_angle = 0;
+    //     let uranus_angle = 0;
+    //     let neptune_angle = 0;
+    //     function animate(){
+    //
+    //         earth_angle += orbit_velocity / earth_period;
+    //         mars_angle += orbit_velocity / mars_period;
+    //         jupiter_angle += orbit_velocity / jupiter_period;
+    //         saturn_angle += orbit_velocity / saturn_period;
+    //         uranus_angle += orbit_velocity / uranus_period;
+    //         neptune_angle += orbit_velocity / neptune_period;
+    //         earthTransform.setAttribute("translation", `${Math.cos(earth_angle) * 1000} 0 ${Math.sin(earth_angle) * 1000}`);
+    //         marsTransform.setAttribute("translation", `${Math.cos(mars_angle) * 1000} 0 ${Math.sin(mars_angle) * 1000}`);
+    //         jupiterTransform.setAttribute("translation", `${Math.cos(jupiter_angle) * 3000} 0 ${Math.sin(jupiter_angle) * 3000}`);
+    //         saturnTransform.setAttribute("translation", `${Math.cos(saturn_angle) * 2000} 0 ${Math.sin(saturn_angle) * 2000}`);
+    //         uranusTransform.setAttribute("translation", `${Math.cos(uranus_angle) * 1600} 0 ${Math.sin(uranus_angle) * 1600}`);
+    //         neptuneTransform.setAttribute("translation", `${Math.cos(neptune_angle) * 100} 0 ${Math.sin(neptune_angle) * 100}`);
+    //         requestAnimationFrame(animate);
+    //     }
+    //     animate();
+    // }
+    //
+    // orbit();
+ */
