@@ -7,26 +7,35 @@
     <script src='../libs/jquery-3.7.1.min.js' type='text/javascript'></script>
     <link href='styles.css' rel='stylesheet' type='text/css'></link>
     <script type="module">
-        import {initalize_borders} from "../Assignment_1/Scripts/Map.js"
-        import {initalize_ship} from "../Assignment_1/Scripts/ship.js";
-        import {Change_Orientation} from "./Scripts/camera_test.js";
-        import {initalize_planets} from "./Scripts/planets.js";
-        //
-        // initalize_borders(document);
+        import {initalize_ship} from "./Scripts/ship.js";
+        import {initalize_planets, Planet_Arr}
+            from "./Scripts/planets.js";
+        import {createAmmoBox} from "./Scripts/AmmoBox.js";
+
         initalize_ship(document);
         initalize_planets(document);
+        createAmmoBox(document);
         document.body.style.overflow = "hidden";
     </script>
 </head>
-<body onload=main() style="background: #3a3a3a">
+<body style="background: #3a3a3a">
+
+
 <h1 style="color: #fff; text-align: center">Space Fighter</h1>
 <!-- Mouse Tracking Area -->
 <div id="mouseTracker">
     <svg id="crosshairSVG">
         <circle cx="400" cy="350" r="40" stroke="green" stroke-width="2" fill="none"/>
-<!--        <line x1="50" y1="10" x2="50" y2="90" style="stroke:white;stroke-width:3"/>-->
-<!--        <line x1="10" y1="50" x2="90" y2="50" style="stroke:white;stroke-width:3"/>-->
+        <!--        <line x1="50" y1="10" x2="50" y2="90" style="stroke:white;stroke-width:3"/>-->
+        <!--        <line x1="10" y1="50" x2="90" y2="50" style="stroke:white;stroke-width:3"/>-->
     </svg>
+    <div id="gameoverlay">
+        <p>
+            <span id="score">Score: 0</span>
+            <span id="health">Health: 100</span>
+            <span id="ammo">Ammo: 100</span>
+        </p>
+    </div>
 </div>
 <!-- Overlay for Position -->
 <div id="position_overlay">
@@ -38,35 +47,30 @@
     <p id="pitch">
         Current Pitch:
     </p>
+    <h2>Roll</h2>
+    <p id="roll">
+        Current Roll:
+    <p>
+        <span id="x">X: 0</span>
+        <span id="y">Y: 0</span>
+        <span id="z">Z: 0</span>
+    </p>
 </div>
 
 
 <!-- Camera Controls -->
-<div id="CameraControl_Container">
-    <button id="birds_eye">
-        up
-    </button>
-    <button id="bottom_up">
-        down
-    </button>
-    <button id="left_view">
-        left
-    </button>
-    <button id="right_view">
-        right
-    </button>
-</div>
+
 
 
 <div id="content" style="width: 100%;">
-    <x3d disableKeys="true" height="700px"  width="800px">
+    <x3d disableKeys="true" height="700px" width="800px">
         <scene id="scene">
             <Viewpoint
                     description="defaultX3DViewpointNode"
                     id="viewpoint"
                     orientation="0 0 0 0"
                     position="0 20 100"
-                    zFar="5000"
+                    zFar="8000"
                     zNear="0">
             </Viewpoint>
             <NavigationInfo
@@ -76,7 +80,7 @@
                     type="EXAMINE">
             </NavigationInfo>
             <Background
-                    skyColor="0 0 0"    groundColor="0 0 0">
+                    skyColor="0 0 0" groundColor="0 0 0">
             </Background>
 
         </scene>
@@ -90,5 +94,7 @@
     </p>
 </div>
 </body>
-<script src="main.js"></script>
+<script src="main.js" type="module">
+    main();
+</script>
 </html>

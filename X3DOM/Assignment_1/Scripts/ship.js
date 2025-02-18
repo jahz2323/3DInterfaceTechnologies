@@ -68,10 +68,10 @@ function createLaserBarrel(document, translation) {
     let pointLight = document.createElement("PointLight");
     pointLight.setAttribute("rotation", "1 0 0 1.57"); // Rotate to point forward
     pointLight.setAttribute("on", "TRUE");
-    pointLight.setAttribute("intensity", "1"); // Brightness
-    pointLight.setAttribute("color", "1 0 0"); // Red light
-    pointLight.setAttribute("location", "0 0 5"); // Slightly in front of the barrel
-    pointLight.setAttribute("radius", "10"); // Light spread radius
+    pointLight.setAttribute("intensity", "0.5"); // Brightness
+    pointLight.setAttribute("color", "0 1 0.3"); // green light
+    pointLight.setAttribute("location", "0 0 20"); // Slightly in front of the barrel
+    pointLight.setAttribute("radius", "700"); // Light spread radius
 
     barrelGroup.appendChild(pointLight); // Attach the light to the barrel
 
