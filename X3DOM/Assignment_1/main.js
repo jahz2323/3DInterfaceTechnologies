@@ -4,7 +4,6 @@ import {check_Group} from "./Scripts/click_interactions.js";
 
 let scene = document.getElementById("scene");
 
-
 //console.logs to html
 (function () {
     let old = console.log;
@@ -21,22 +20,8 @@ let scene = document.getElementById("scene");
 function main() {
     scene = document.getElementById("scene");
     console.log("initalized scene");
-    animationFrame();
 }
 
-function animationFrame() {
-    window.requestAnimationFrame(updateModel);
-}
-
-let timeStart = -1;
-
-function updateModel(timeStamp_ms) {
-    if (timeStart === -1) {
-        timeStart = timeStamp_ms;
-    }
-
-    projectile_update();
-}
 
 // Start update loop when DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {
@@ -68,6 +53,19 @@ document.addEventListener("DOMContentLoaded", () => {
     let max_speed = 5; // Maximum speed of the ship
     let deceleration = 0.5; // Deceleration rate
     let sensitivity = 0.5; // higher sensitivity for faster movement
+
+    // Forward vector for ship movement
+
+    // x = sin(yaw) * cos(pitch)
+    // y = -sin(pitch)
+    // z = -cos(yaw) * cos(pitch)
+    let forwardVector = {
+        x: Math.sin(yaw) * Math.cos(pitch),
+        y: -Math.sin(pitch),
+        z: -Math.cos(yaw) * Math.cos(pitch),
+    };
+    //Normalize the vector to ensure uniform speed
+    let magnitude = Math.sqrt(forwardVector.x ** 2 + forwardVector.y ** 2 + forwardVector.z ** 2);
 
     // Track key states
     let keys = {};
@@ -115,31 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return true;
     }
 
-    // Fire projectile on key press
-    addEventListener("keypress", (event) => {
-        if (event.key === "f") {
-            if (AmmoCheck()) {
-                //play audio
-                let audio = new Audio("../Assignment_1/Audio/blaster.wav");
-                audio.volume = 0.01;
-                audio.play();
-
-                //fire projectile
-                fireProjectile(yaw, pitch);
-                ammo -= 1;
-            } else {
-                console.log("Out of Ammo");
-            }
-
-        }
-        if (event.key === "v") {
-            //change to first person flight;
-            //change the viewpoint to the ship
-            FirstPerson = !FirstPerson;
-        }
-    })
-
-
+    // Crosshair update function
     function updateCrossHair(offsetX, offsetY) {
         let crosshair = document.getElementById("crosshairSVG");
 
@@ -158,13 +132,14 @@ document.addEventListener("DOMContentLoaded", () => {
         let centerX = rect.width / 2;
         let centerY = rect.height / 2;
 
+        // Calculate offset from center, normalize to [-1, 1]
         let offsetX = (event.clientX - rect.left - centerX) / centerX;
         let offsetY = (event.clientY - rect.top - centerY) / centerY;
 
         updateCrossHair(offsetX, offsetY);
 
         // Convert offset to yaw and pitch
-        let maxYaw = Math.PI;  // 45 degrees (left/right)
+        let maxYaw = Math.PI;  // 180 degrees (left/right)
         let maxPitch = Math.PI / 2;  // 90 degrees (up/down)
 
         yaw = offsetX * maxYaw;
@@ -177,8 +152,6 @@ document.addEventListener("DOMContentLoaded", () => {
         // Handle roll (keyboard based or add a separate event listener)
         // For example, if "Q" or "E" is pressed, adjust roll
 
-
-        // Clamp roll (optional, depends on your game mechanics)
         let maxRoll = Math.PI / 2;  // Limit roll to 90 degrees
         roll = Math.max(-maxRoll, Math.min(maxRoll, roll));
 
@@ -195,23 +168,23 @@ document.addEventListener("DOMContentLoaded", () => {
         let Ship_pitchTransform = document.getElementById("pitchTransform");
         let Ship_rollTransform = document.getElementById("rollTransform"); // Add a roll transform in your scene.
 
+        //Check if elements exist before applying rotation
         if (!Ship_yawTransform || !Ship_pitchTransform || !Ship_rollTransform) {
             console.error("One or more transform elements not found!");
             return;
         }
-
+        // Apply sensitivity to yaw and pitch for slower camera movement
         yaw *= sensitivity;
         pitch *= sensitivity;
         let yawChange = yaw + prevYaw;
-        let roll = yawChange * 5; // Adjust factor for a natural feel
+        let roll = yawChange * 1; // Adjust factor for a natural feel
 
-        // Clamp roll to avoid excessive tilting
+        //limit roll to avoid excessive tilting
         roll = Math.max(-0.8, Math.min(0.8, roll));
         // Apply transformations
         Ship_yawTransform.setAttribute("rotation", `0 1 0 ${-yaw}`);
         Ship_pitchTransform.setAttribute("rotation", `1 0 0 ${-pitch}`);
         Ship_rollTransform.setAttribute("rotation", `0 0 1 ${-roll}`);
-
 
         prevYaw = yaw;
     }
@@ -231,21 +204,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Camera offset is determined by yaw and pitch
         let cameraDistance = 100;  // Distance behind the ship
-        let firstPersonDistance = 50;  // Distance in front of the ship in -z coord
+        let firstPersonDistance = 10;  // Distance in front of the ship in -z coord
 
         if (FirstPerson) {
             // First-person view: Camera directly on the ship's position
             console.log("First Person View");
             // Set the viewpoint to infront of the ship
 
-            let forwardVector = {
-                x: Math.sin(adjustedYaw) * Math.cos(adjustedPitch),
-                y: -Math.sin(adjustedPitch),
-                z: -Math.cos(adjustedYaw) * Math.cos(adjustedPitch),
-            };
 
-            // Normalize the vector to ensure uniform speed
-            let magnitude = Math.sqrt(forwardVector.x ** 2 + forwardVector.y ** 2 + forwardVector.z ** 2);
             if (magnitude > 0) {
                 forwardVector.x /= magnitude;
                 forwardVector.y /= magnitude;
@@ -262,6 +228,9 @@ document.addEventListener("DOMContentLoaded", () => {
             viewpoint.setAttribute("orientation", `0 1 0 ${-yaw}`);
             updateShipPosition();
             return;
+        }
+        else{
+            console.log("Third Person View");
         }
 
         let cameraOffset = {
@@ -291,7 +260,6 @@ document.addEventListener("DOMContentLoaded", () => {
             y: -Math.sin(pitch),
             z: -Math.cos(yaw) * Math.cos(pitch),
         };
-
 
         // Normalize vectors to prevent diagonal speed boost
         let forwardMagnitude = Math.sqrt(forwardVector.x ** 2 + forwardVector.y ** 2 + forwardVector.z ** 2);
@@ -337,6 +305,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
+    // Fire projectile on key press
+    addEventListener("keypress", (event) => {
+        if (event.key === "f") {
+            if (AmmoCheck()) {
+                //play audio
+                let audio = new Audio("../Assignment_1/Audio/blaster.wav");
+                audio.volume = 0.01;
+                audio.play();
+
+                //fire projectile
+                fireProjectile(yaw, pitch);
+                ammo -= 1;
+            } else {
+                console.log("Out of Ammo");
+            }
+
+        }
+        if (event.key === "v") {
+            //change to first person flight;
+            //change the viewpoint to the ship
+            FirstPerson = !FirstPerson;
+        }
+    })
+
 
     // Keyboard Event Listeners
     document.addEventListener("keydown", (event) => {
@@ -347,8 +339,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         ship_bgm.pause();
         ship_bgm.currentTime = 0;
-
-
     });
 
     document.addEventListener("keyup", (event) => {
@@ -393,6 +383,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // **Calculate projectile movement direction (based on ship's yaw & pitch)**
         let projectileSpeed = 5; // Adjust projectile speed
+        // Forward vector for ship movement
+
         let forwardVector = {
             x: Math.sin(yaw) * Math.cos(pitch),
             y: -Math.sin(pitch),
@@ -426,6 +418,10 @@ document.addEventListener("DOMContentLoaded", () => {
         Planet_Arr.forEach(planet => {
             let planetPos = planet[0];
             let planetRadius = planet[1];
+
+            //collision formula
+            //distance = sqrt((x2-x1)^2 + (y2-y1)^2 + (z2-z1)^2)
+            //if distance < shipRadius + planetRadius, collision detected
 
             let [x, y, z] = planetPos[0].split(" ").map(parseFloat);
             let dx = shipPos.x - x;
