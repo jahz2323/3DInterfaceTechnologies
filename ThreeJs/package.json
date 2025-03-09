@@ -1,0 +1,22 @@
+{
+  "name": "threejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jahz2323/3DInterfaceTechnologies.git"
+  },
+  "private": true,
+  "dependencies": {
+    "jquery": "^3.7.1",
+    "three": "^0.174.0"
+  },
+  "devDependencies": {
+    "vite": "^6.2.1"
+  }
+}
