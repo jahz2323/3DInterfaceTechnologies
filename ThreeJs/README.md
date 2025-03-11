@@ -1,4 +1,4 @@
-3D Car renderer 
+3D water renderer 
 -
 Assignment 2 for 3D Interface technologies, 
 On Three.js. 
@@ -16,5 +16,3 @@ Requirements:
 
 Details: 
 
-Car showcase with user interaction, animation and dynamic lighting. 
-        
