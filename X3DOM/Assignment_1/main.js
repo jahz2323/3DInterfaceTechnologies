@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let speed = 0; // Variable to store the speed of the ship
     let roll = 0; // Variable to store the roll of the ship
     let rollSpeed = 0.05; // Speed at which the ship rolls
-    let acceleration = 0.1;
+    let acceleration = 0.1; // rate of change of speed
     let max_speed = 5; // Maximum speed of the ship
     let deceleration = 0.5; // Deceleration rate
     let sensitivity = 0.5; // higher sensitivity for faster movement
@@ -311,7 +311,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (AmmoCheck()) {
                 //play audio
                 let audio = new Audio("../Assignment_1/Audio/blaster.wav");
-                audio.volume = 0.01;
+                audio.volume = 0.04;
                 audio.play();
 
                 //fire projectile
@@ -331,10 +331,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // Keyboard Event Listeners
+    /*
+        listen for user key hold down, store bool as true if key is let go then store false
+     */
     document.addEventListener("keydown", (event) => {
         keys[event.key] = true;
         let ship_bgm = new Audio("../Assignment_1/Audio/ShipMoveMusic.mp3");
-        ship_bgm.volume = 0.1;
+        ship_bgm.volume = 0.3;
         ship_bgm.play();
 
         ship_bgm.pause();
@@ -368,7 +371,7 @@ document.addEventListener("DOMContentLoaded", () => {
         projectile_appearance.appendChild(projectile_material);
 
         let projectile_sphere = document.createElement("sphere");
-        projectile_sphere.setAttribute("radius", "0.2"); // Smaller size
+        projectile_sphere.setAttribute("radius", "0.5");
         projectile_sphere.setAttribute("solid", "true");
 
         projectile.appendChild(projectile_appearance);
@@ -410,7 +413,38 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+    function projectile_update() {
+        if (projectiles.length === 0) {
+            window.requestAnimationFrame(projectile_update);
+            return;
+        }
 
+        for (let i = projectiles.length - 1; i >= 0; i--) {
+            let projectile = projectiles[i];
+
+            // Update position based on velocity
+            projectile.position.x += projectile.velocity.x;
+            projectile.position.y += projectile.velocity.y;
+            projectile.position.z += projectile.velocity.z;
+
+            // Update projectile's transform position
+            projectile.element.setAttribute("translation",
+                `${projectile.position.x} ${projectile.position.y} ${projectile.position.z}`
+            );
+
+            // Remove projectile if it moves too far
+            if (Math.abs(projectile.position.x) < -500 ||
+                Math.abs(projectile.position.y) < -500 ||
+                Math.abs(projectile.position.z) < -500) {
+                projectile.element.parentNode.removeChild(projectile.element);
+                projectiles.splice(i, 1);
+            }
+        }
+
+        window.requestAnimationFrame(projectile_update);
+    }
+
+    window.requestAnimationFrame(projectile_update);
     //check for collisions
     function checkShipCollision(shipPos) {
         //check for planets collision
@@ -478,6 +512,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    /*
+        Small optimisation to remove object in scene
+        TODO - Issue when removing and toggling again - crashes scene
+
+     */
     function checktoggles(){
         if(!ammoVisible){
             let ammoGroup = document.getElementById("ammoGroup");
@@ -493,8 +532,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             ammoVisible = !ammoVisible;
         }
-
-
         if(!planetsVisible){
             let planetGroup = document.getElementById("planetGroup");
             if(planetGroup){
@@ -508,8 +545,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;;
             }
         }
+        return;
     }
 
+    //
     document.querySelector("#toggle button:nth-child(1)").addEventListener("click", () => {
         planetsVisible = !planetsVisible;
         console.log("Planets visibility:", planetsVisible);
@@ -540,38 +579,6 @@ document.addEventListener("DOMContentLoaded", () => {
 let projectiles = []; // Store active projectiles
 const maxProjectiles = 100; // Limit projectiles
 
-function projectile_update() {
-    if (projectiles.length === 0) {
-        window.requestAnimationFrame(projectile_update);
-        return;
-    }
-
-    for (let i = projectiles.length - 1; i >= 0; i--) {
-        let projectile = projectiles[i];
-
-        // Update position based on velocity
-        projectile.position.x += projectile.velocity.x;
-        projectile.position.y += projectile.velocity.y;
-        projectile.position.z += projectile.velocity.z;
-
-        // Update projectile's transform position
-        projectile.element.setAttribute("translation",
-            `${projectile.position.x} ${projectile.position.y} ${projectile.position.z}`
-        );
-
-        // Remove projectile if it moves too far
-        if (Math.abs(projectile.position.x) < -500 ||
-            Math.abs(projectile.position.y) < -500 ||
-            Math.abs(projectile.position.z) < -500) {
-            projectile.element.parentNode.removeChild(projectile.element);
-            projectiles.splice(i, 1);
-        }
-    }
-
-    window.requestAnimationFrame(projectile_update);
-}
-
-window.requestAnimationFrame(projectile_update);
 
 
 export {main}
