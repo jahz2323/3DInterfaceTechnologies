@@ -48,9 +48,18 @@ const material = new THREE.MeshPhongMaterial({color: 0x0000AA,
     wireframe: false ,
     side: THREE.DoubleSide,
     shininess: 20,
-
 });
-const plane = new THREE.Mesh(geometry, material);
+const texture = new THREE.TextureLoader().load('../src/public/water.jpg')
+const texture_map = new THREE.MeshPhongMaterial({
+    map: texture,
+    side: THREE.DoubleSide,
+    shininess: 20,
+    wireframe: true
+})
+
+
+
+let plane = new THREE.Mesh(geometry, texture_map);
 
 
 //create sum of signs
@@ -96,9 +105,9 @@ function animate(){
         let y = posAttribute.getY(i);
 
         // Calculate the y-displacement using a sine wave
-        y = a1 * Math.sin(f1 * (x + z + v1 * time))
+        y = a1 * Math.sin(f1 * (x - z + v1 * time))
             + a2 * Math.sin(f2 * (x - z + v2 * time))
-            + a3 * Math.sin(f3 * (x + z + v3 * time))
+            + a3 * Math.sin(f3 * (x - z + v3 * time))
             + a4 * Math.sin(f4 * (x - z + v4 * time))
         ;
 
@@ -106,8 +115,10 @@ function animate(){
         let Q1 = 1 / wavelength1 * a1;
         let Q2 = 1 / wavelength1 * a2;
         let Q3 = 1 / wavelength1 * a3;
-        // y = Q1*a1 * Math.cos(Math.sqrt(Math.abs(x-z)) * w1 * + v1* phase1*time)
-        // + Q2*a2 * Math.cos(Math.sqrt(Math.abs(y-z)) * w1 * + v1* phase2*time)
+        // y = Q1*a1 * Math.cos( (x + z) * w1 * + v1* phase1*time)
+        // + Q2*a2 * Math.cos((x-z) * w2 * + v2* phase2*time)
+        // + Q3*a3 * Math.cos((x+z) * w3 * + v3* phase3*time)
+
 
        let dydx = a1*f1*Math.cos(f1*(x+z+v1*time))
         +  a2*f2*Math.cos(f2*(x-z+v2*time))
@@ -138,7 +149,8 @@ function animate(){
 animate();
 $(document).ready(function(){
     console.log(posAttribute);
-})
+});
+
 
 
 

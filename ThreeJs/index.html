@@ -1,23 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link href="favicon.ico" rel="icon" type="image/x-icon">
     <meta charset="UTF-8">
     <title>SceneRender</title>
+    <link rel="stylesheet" href="../ThreeJs/src/styles/styles.css">
+
 
     <script src="src/scripts/Plane.js" type="module"></script>
 </head>
 
 
 <body style="background-color: black">
-    <div class="container-fluid">
-        <h1 style="color: white; text-align: center">
-            Three.Js Water Sim
-        </h1>
+<canvas id="c"></canvas>
+<div id="loading">
+    <div class="progress">
+        <div class="progressbar"></div>
     </div>
-    <script type="module" src="./src/main.js">
+</div>
+<div class="container-fluid">
+    <h1 style="color: white; text-align: center">
+        Three.Js Water Sim
+    </h1>
+</div>
+<script src="./src/main.js" type="module">
 
-    </script>
+</script>
 
 </body>
 </html>

@@ -1,14 +1,29 @@
 import * as THREE from "three";
 import {GUI} from "three/addons/libs/lil-gui.module.min.js"
-
+import {plane} from "./Plane.js";
 
 const geometry = new THREE.SphereGeometry();
-const material =  new THREE.MeshLambertMaterial({
+const material =  new THREE.MeshPhongMaterial({
     color: 0xAA00BB,
     shininess: 1,
 
 })
-const SunLight = new THREE.Mesh(geometry, material)
+
+const texture = new THREE.TextureLoader().load('../src/public/water.jpg')
+// try {
+//     loader.load('../src/public/water.jpg', (texture) => {
+//         texture.colorSpace = THREE.SRGBColorSpace;
+//         let text_mat = new THREE.MeshBasicMaterial({
+//             map: texture,
+//         });
+//         console.log(texture)
+//     })
+// } catch (error){
+//     console.log(error)
+// }
+
+const texture_map = new THREE.MeshPhongMaterial({map: texture})
+const SunLight = new THREE.Mesh(geometry,texture_map )
 SunLight.position.set(0, 10, 0)
 
 const color = 0xFFFFFF;
@@ -32,9 +47,7 @@ const gui = new GUI();
 
 gui.addColor(new ColorGUIHelper(light, 'color'), 'value').name('color');
 gui.add(light, 'intensity', 0, 5, 0.01);
-gui.add(light.target.position, 'x', -100, 100);
-gui.add(light.target.position, 'z', -100, 100);
-gui.add(light.target.position, 'y', 0, 100);
+
 
 makeXYZGUI(gui, light.position, 'position', updateLight);
 makeXYZGUI(gui, light.target.position, 'target', updateLight);
