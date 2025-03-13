@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import $ from "jquery";
-import {plane} from "./scripts/Plane.js"
+import {plane, under_plane} from "./scripts/Plane.js"
 import {SunLight,light, helper, lightBox}  from "./scripts/SunLight.js";
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -14,10 +14,12 @@ document.body.appendChild( renderer.domElement );
 
 
 scene.add(plane);
+scene.add(under_plane);
 scene.add(SunLight);
 scene.add(light);
 scene.add(helper);
 scene.add(lightBox);
+
 
 camera.position.z = 5;
 

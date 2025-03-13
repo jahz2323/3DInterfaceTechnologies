@@ -49,6 +49,10 @@ const material = new THREE.MeshPhongMaterial({color: 0x0000AA,
     side: THREE.DoubleSide,
     shininess: 20,
 });
+
+let under_plane = new THREE.Mesh(geometry, material);
+under_plane.position.set(0,-15,0)
+
 const texture = new THREE.TextureLoader().load('../src/public/water.jpg')
 const texture_map = new THREE.MeshPhongMaterial({
     map: texture,
@@ -140,7 +144,7 @@ function animate(){
         let Normal= T_normalized.clone().cross(B_normalized);
         Normal.normalize();
         // N . L = cos(theta)
-        normAttribute.setXYZ(i,Normal.x,Normal.y, Normal.z);
+        normAttribute.setXYZ(i,-Normal.x,-Normal.y, -Normal.z);
     }
     posAttribute.needsUpdate = true;
     normAttribute.needsUpdate = true;
@@ -154,4 +158,4 @@ $(document).ready(function(){
 
 
 
-export { plane};
+export { plane, under_plane};
