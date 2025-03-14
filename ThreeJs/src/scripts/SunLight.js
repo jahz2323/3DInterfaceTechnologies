@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import {GUI} from "three/addons/libs/lil-gui.module.min.js"
-import {plane} from "./Plane.js";
 
 const geometry = new THREE.SphereGeometry();
 const material =  new THREE.MeshPhongMaterial({
@@ -9,22 +8,10 @@ const material =  new THREE.MeshPhongMaterial({
 
 })
 
-const texture = new THREE.TextureLoader().load('../src/public/water.jpg')
-// try {
-//     loader.load('../src/public/water.jpg', (texture) => {
-//         texture.colorSpace = THREE.SRGBColorSpace;
-//         let text_mat = new THREE.MeshBasicMaterial({
-//             map: texture,
-//         });
-//         console.log(texture)
-//     })
-// } catch (error){
-//     console.log(error)
-// }
-
-const texture_map = new THREE.MeshPhongMaterial({map: texture})
-const SunLight = new THREE.Mesh(geometry,texture_map )
-SunLight.position.set(0, 10, 0)
+const texture_water = new THREE.TextureLoader().load('../src/public/textures/water.jpg')
+const texture_map = new THREE.MeshPhongMaterial({map: texture_water})
+const spheretest = new THREE.Mesh(geometry,texture_map )
+spheretest.position.set(0, 10, 0)
 
 const color = 0xFFFFFF;
 const intensity = 1;
@@ -53,30 +40,32 @@ makeXYZGUI(gui, light.position, 'position', updateLight);
 makeXYZGUI(gui, light.target.position, 'target', updateLight);
 function makeXYZGUI(gui, vector3, name, onChangeFn) {
     const folder = gui.addFolder(name);
-    folder.add(vector3, 'x', -10, 10).onChange(onChangeFn);
-    folder.add(vector3, 'y', 0, 10).onChange(onChangeFn);
-    folder.add(vector3, 'z', -10, 10).onChange(onChangeFn);
+    folder.add(vector3, 'x', -50, 50).onChange(onChangeFn);
+    folder.add(vector3, 'y', -50, 50).onChange(onChangeFn);
+    folder.add(vector3, 'z', -50, 50).onChange(onChangeFn);
     folder.open();
 }
 const helper = new THREE.DirectionalLightHelper(light, 'color');
 
-let lightBox_geometry = new THREE.BoxGeometry();
-let lightBox_material = new THREE.MeshPhongMaterial({
+// Sun Geometry --
+let lightSphere_geometry = new THREE.SphereGeometry(4);
+const texture_sun = new THREE.TextureLoader().load('../src/public/textures/sun.png')
+let lightSphere_material = new THREE.MeshBasicMaterial({
     color: 0xFFFFFF,
     wireframe: false,
-    shininess: 1
+    map: texture_sun,
 });
 
 
-let lightBox = new THREE.Mesh(lightBox_geometry, lightBox_material);
+let lightSphere = new THREE.Mesh(lightSphere_geometry, lightSphere_material);
 
 function updateLight() {
     light.target.updateMatrixWorld();
     helper.update();
-    lightBox.position.set(light.position.x, light.position.y, light.position.z);
+    lightSphere.position.set(light.position.x, light.position.y, light.position.z);
 }
 updateLight();
 
 
-export {SunLight, light , helper, lightBox}
+export {spheretest, light , helper, lightSphere}
 
