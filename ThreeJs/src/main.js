@@ -1,34 +1,35 @@
 import * as THREE from 'three';
 import $ from "jquery";
 import {plane, under_plane} from "./scripts/Plane.js"
-import {spheretest,light, helper, lightSphere}  from "./scripts/SunLight.js";
+import {light, helper, lightSphere}  from "./scripts/SunLight.js";
 import {camera,renderer}   from "./scripts/CameraShader.js";
-import {createPier} from "./scripts/SurfaceObjects.js";
+import {CreateSceneObjects} from "./scripts/SurfaceObjects.js";
+import {brownianWave} from "./scripts/BrownianWave.js";
+import {SkyBox} from "./scripts/SkyBox.js";
 
 const scene = new THREE.Scene();
 
-
-const pier = createPier();
-scene.add(plane);
-scene.add(under_plane);
-scene.add(spheretest);
+const objects = CreateSceneObjects();
+const SkyBox_ = SkyBox();
+// scene.add(plane); // sum of sines plane
+// scene.add(brownianWave);
+// scene.add(under_plane); // ocean floor
 scene.add(light);
 scene.add(helper);
 scene.add(lightSphere);
-scene.add(pier);
+scene.add(objects);
+scene.add(SkyBox_);
+scene.fog = new THREE.Fog( 0xe5f9ee, 0, 1000 );
 
 const size = 100;
 const divisions = 100;
-const gridHelper = new THREE.GridHelper( size, divisions );
-gridHelper.position.set( 0, -15, 0 );
-scene.add( gridHelper );
+// const gridHelper = new THREE.GridHelper( size, divisions );
+// gridHelper.position.set( 0, -15, 0 );
+// scene.add( gridHelper );
 
 renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.setAnimationLoop( animate );
 function animate() {
-    // plane[0].rotation.x += 0.01;
-    // plane[0].rotation.y += 0.01;
-
 
     renderer.render(scene, camera);
     // console.log("Current Camera position: ", camera.position.x, camera.position.y, camera.position.z);

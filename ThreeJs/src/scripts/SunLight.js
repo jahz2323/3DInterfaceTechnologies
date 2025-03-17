@@ -40,9 +40,9 @@ makeXYZGUI(gui, light.position, 'position', updateLight);
 makeXYZGUI(gui, light.target.position, 'target', updateLight);
 function makeXYZGUI(gui, vector3, name, onChangeFn) {
     const folder = gui.addFolder(name);
-    folder.add(vector3, 'x', -50, 50).onChange(onChangeFn);
-    folder.add(vector3, 'y', -50, 50).onChange(onChangeFn);
-    folder.add(vector3, 'z', -50, 50).onChange(onChangeFn);
+    folder.add(vector3, 'x', -1000, 1000).onChange(onChangeFn);
+    folder.add(vector3, 'y', -1000, 1000).onChange(onChangeFn);
+    folder.add(vector3, 'z', -1000, 1000).onChange(onChangeFn);
     folder.open();
 }
 const helper = new THREE.DirectionalLightHelper(light, 'color');

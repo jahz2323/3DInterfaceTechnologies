@@ -1,14 +1,16 @@
 import {plane, under_plane} from "./Plane.js"
 import * as THREE from "three";
+import {light} from "./SunLight.js";
 
 /**
  *  Custom objects
  *  Buoy
  *  pier
- *
+ *  LightHouse
+ *  Island
  */
-const createPier = () =>{
-    const pier = new THREE.Group();
+const CreateSceneObjects = () =>{
+    const SceneObjects = new THREE.Group();
     const cylinderheight = 30;
     const cylinderradius = 2;
     const spacing = 30;
@@ -32,7 +34,7 @@ const createPier = () =>{
         const mesh = new THREE.Mesh(platform, material);
         mesh.position.set(p.x, p.y, p.z);
         mesh.rotateY(Math.PI / 2);
-        pier.add(mesh);
+        SceneObjects.add(mesh);
     })
 
 
@@ -50,10 +52,77 @@ const createPier = () =>{
         const material = new THREE.MeshPhongMaterial({color: 0x00ff00});
         const cylinder = new THREE.Mesh(geometry, material);
         cylinder.position.set(p.x, p.y - 5, p.z );
-        pier.add(cylinder);
+        SceneObjects.add(cylinder);
     });
+    // Create buoy - custom geo torus?
+    // Create Lighthouse - Cyclinder, cone and light source
+    // Create Island - Customgeo
+
+    function CreateBuoy() {
+
+    }
 
 
-    return pier;
+    function CreateLighthouse() {
+        const x_origin = 0;
+        const y_origin = 0;
+        const height = 120;
+        const faces = 6;
+        const angle_increase = 2 * Math.PI / faces;
+        let theta = 0;
+        let indices = [];
+        let vertices = [];
+        let normals = [];
+
+        let r = 20;
+
+        let x0 = r;
+        let y0 = 0;
+
+        for(let i= 1; i< faces + 1; i++){
+            theta += angle_increase;
+            let x1 = r * Math.cos(theta *= i);
+            let y1 = r * Math.sin(theta *= i);
+            let z = height/2;
+            //top base
+            vertices.push(x_origin, y_origin, z);
+            vertices.push(x0, y0, z);
+            vertices.push(x1,y1,z);
+            //sides
+            vertices.push(x1, y1, z);
+            vertices.push(x0, y0, z);
+            vertices.push(x0, y0, -z);
+
+            vertices.push(x1, y1, z);
+            vertices.push(x0, y0, -z);
+            vertices.push(x1, y1, -z);
+
+            //bottom base
+            vertices.push(x1, y1, -z);
+            vertices.push(x0, y0, -z);
+            vertices.push(x_origin, y_origin, -z);
+
+            x0 = x1;
+            y0 = y1;
+
+        }
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+        const material = new THREE.MeshBasicMaterial({color: 0x00ff00});
+        const lighthouse = new THREE.Mesh(geometry, material);
+        lighthouse.rotateX(-Math.PI / 2);
+        lighthouse.position.set(100, 80, 20);
+        SceneObjects.add(lighthouse);
+    }
+    function CreateIsland() {
+
+    }
+    CreateLighthouse();
+    return SceneObjects;
 }
-export {createPier};
+
+
+
+
+
+export {CreateSceneObjects};
