@@ -131,12 +131,11 @@ function specular(camera, light, Normal) {
     const View_vec = new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z).clone().normalize();
     const Light_vec = new THREE.Vector3(light.position.x, light.position.y, light.position.z).clone().normalize();
     const H_vec = View_vec.add(Light_vec).normalize();
-    const specular = H_vec.dot(Normal);
     // const Light_vec = light.position.clone().normalize();
     // const H_vec = View_vec.clone().add(Light_vec).normalize();
     // const specular =  H_vec.clone().dot(Normal).normalize();
     // console.log(specular);
-    return specular;
+    return H_vec.dot(Normal);
 }
 
 function animate() {
