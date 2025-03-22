@@ -8,10 +8,15 @@ import * as THREE from "three";
  */
 
 const SkyBox = () => {
-    const texture = new THREE.TextureLoader().load('../src/public/textures/qwantani_noon_2k.png');
-    const geometry = new THREE.BoxGeometry(1000, 1000, 1000);
-    const material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
+    const texture = new THREE.TextureLoader().load('../src/public/textures/envmaps/Sunview.webp');
+    const geometry = new THREE.BoxGeometry(2000, 2000, 2000);
+    const material = new THREE.MeshPhongMaterial({
+        map: texture,
+        side: THREE.DoubleSide
+    });
     const skybox = new THREE.Mesh(geometry, material);
-    return skybox;
+    skybox.position.set(0, 600, 0);
+    console.log('Material inside SkyBox:', material);
+    return {skybox, material};
 }
 export { SkyBox };

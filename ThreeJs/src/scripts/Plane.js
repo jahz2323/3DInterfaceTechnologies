@@ -1,7 +1,8 @@
 import * as THREE from "three";
 import $ from "jquery";
 import {camera} from "./CameraShader.js";
-import {light} from "./SunLight.js";
+import {DirectionalLight, BeaconLight} from "./SunLight.js";
+
 
 /**
  *  Function createPlane
@@ -14,8 +15,8 @@ import {light} from "./SunLight.js";
  *
  */
 
-const gridSize = 100;
-let spaceing = 10;
+const gridSize = 110;
+let spaceing = 15;
 
 const vertices = [];
 const normals = [];
@@ -58,8 +59,9 @@ const OceanFloorMap = new THREE.MeshPhongMaterial({
     wireframe: false,
     side: THREE.DoubleSide,
     shininess: 20,
+    flatShading: false,
 })
-const texture = new THREE.TextureLoader().load('../src/public/textures/water.jpg')
+const texture = new THREE.TextureLoader().load('../src/public/textures/water2.jpg')
 let texture_map = new THREE.MeshPhongMaterial({
     map: texture,
     side: THREE.DoubleSide,
@@ -67,6 +69,7 @@ let texture_map = new THREE.MeshPhongMaterial({
     specular: new THREE.Color(1, 1, 1),
     flatShading: false,
     envMap: null,
+    shininess: 20,
 })
 
 let under_plane = new THREE.Mesh(geometry2, OceanFloorMap);
@@ -193,9 +196,6 @@ function animate() {
         // N . L = cos(theta)
         normAttribute.setXYZ(i, Normal.x, Normal.y, Normal.z);
         seaBedNorm.setXYZ(i, Normal.x, Normal.y, Normal.z);
-
-        const specularIntensity = specular(camera, light, Normal);
-
     }
     posAttribute.needsUpdate = true;
     normAttribute.needsUpdate = true;

@@ -1,21 +1,25 @@
 import * as THREE from "three";
 import {GUI} from "three/addons/libs/lil-gui.module.min.js"
 
-const geometry = new THREE.SphereGeometry();
-const material =  new THREE.MeshPhongMaterial({
-    color: 0xAA00BB,
-    shininess: 1,
-
-})
-
-const texture_water = new THREE.TextureLoader().load('../src/public/textures/water.jpg')
-const texture_map = new THREE.MeshPhongMaterial({map: texture_water})
-const spheretest = new THREE.Mesh(geometry,texture_map )
-spheretest.position.set(0, 10, 0)
-
-const color = 0xFFFFFF;
+const scene = new THREE.Scene();
+const color = 0x433274;
+const ambColor = 0x242424;
 const intensity = 1;
-const light = new THREE.DirectionalLight(color, intensity);
+const DirectionalLight = new THREE.DirectionalLight(color, intensity);
+const AmbientLight = new THREE.AmbientLight(ambColor, intensity);
+const BeaconLight= new THREE.SpotLight(0xffff00, 2, 800, Math.PI / 12, 0.5);
+BeaconLight.position.set(120, 300, 20); // Position at the top of the lighthouse
+BeaconLight.target.position.set(-40, 0, -100); // Point the light at a target
+BeaconLight.castShadow = true; // Enable shadows
+BeaconLight.shadow.mapSize.width = 1024; // Shadow resolution
+BeaconLight.shadow.mapSize.height = 1024;
+
+const PostLight = new THREE.SpotLight(0xff0000, 1, 80);
+PostLight.position.set(-100, 80, 0);
+PostLight.target.position.set(-100, 0, -20);
+PostLight.castShadow = true; // Enable shadows
+PostLight.shadow.mapSize.width = 1024; // Shadow resolution
+PostLight.shadow.mapSize.height = 1024;
 
 
 class ColorGUIHelper {
@@ -23,21 +27,30 @@ class ColorGUIHelper {
         this.object = object
         this.prop = prop
     }
+
     get value() {
         return `#${this.object[this.prop].getHexString()}`;
     }
+
     set value(hexString) {
         this.object[this.prop].set(hexString);
     }
 }
+
 const gui = new GUI();
+gui.addColor(new ColorGUIHelper(DirectionalLight, 'color'), 'value').name('DirectionalLightColor');
+gui.addColor(new ColorGUIHelper(AmbientLight, 'color'), 'value').name('AmbientLightColor');
+gui.addColor(new ColorGUIHelper(BeaconLight, 'color'), 'value').name('BeaconLightColor');
+gui.addColor(new ColorGUIHelper(PostLight, 'color'), 'value').name('PostLightColor');
+gui.add(DirectionalLight, 'intensity', 0, 5, 0.001);
+gui.add(AmbientLight, 'intensity', 1, 5, 0.001);
+gui.add(BeaconLight, 'intensity', 5, 1000, 0.001);
+gui.add(PostLight, 'intensity', 5, 1000, 0.001);
 
-gui.addColor(new ColorGUIHelper(light, 'color'), 'value').name('color');
-gui.add(light, 'intensity', 0, 5, 0.01);
+const helper = new THREE.DirectionalLightHelper(DirectionalLight, 'color');
+let SceneFog = new THREE.Fog(0xAAAAAA, 300, 2500);
+scene.fog = SceneFog;
 
-
-makeXYZGUI(gui, light.position, 'position', updateLight);
-makeXYZGUI(gui, light.target.position, 'target', updateLight);
 function makeXYZGUI(gui, vector3, name, onChangeFn) {
     const folder = gui.addFolder(name);
     folder.add(vector3, 'x', -1000, 1000).onChange(onChangeFn);
@@ -45,27 +58,50 @@ function makeXYZGUI(gui, vector3, name, onChangeFn) {
     folder.add(vector3, 'z', -1000, 1000).onChange(onChangeFn);
     folder.open();
 }
-const helper = new THREE.DirectionalLightHelper(light, 'color');
+function makeFogGUI(gui, fog, name) {
+    const folder = gui.addFolder(name);
+    //add color control
+    folder.addColor(new ColorGUIHelper(fog, 'color'), 'value').name('color');
+    // Add near and far controls
+    folder.add(fog, 'near', 0.001, 1000).onChange((value) => {
+        fog.near = value;
+        scene.fog.near = value; // Update scene fog
+    });
+    folder.add(fog, 'far', 1000, 3000).onChange((value) => {
+        fog.far = value;
+        scene.fog.far = value; // Update scene fog
+    });
+    folder.open();
+}
+function makeDayAndNight(gui, material) {
+    const dn = {day: true};
+    const folder = gui.addFolder('Day and Night');
+    const daytexture = new THREE.TextureLoader().load('../src/public/textures/envmaps/Sunview.webp');
+    const nighttexture = new THREE.TextureLoader().load('../src/public/textures/envmaps/Oceanview.webp');
 
-// Sun Geometry --
-let lightSphere_geometry = new THREE.SphereGeometry(4);
-const texture_sun = new THREE.TextureLoader().load('../src/public/textures/sun.png')
-let lightSphere_material = new THREE.MeshBasicMaterial({
-    color: 0xFFFFFF,
-    wireframe: false,
-    map: texture_sun,
-});
-
-
-let lightSphere = new THREE.Mesh(lightSphere_geometry, lightSphere_material);
+    folder.add(dn, 'day').onChange((value) => {
+        if (value) {
+            material.map = daytexture;
+        } else {
+            material.map = nighttexture;
+        }
+        material.needsUpdate = true;
+    });
+    folder.open();
+}
 
 function updateLight() {
-    light.target.updateMatrixWorld();
+    DirectionalLight.target.updateMatrixWorld();
+    BeaconLight.target.updateMatrixWorld();
+    PostLight.target.updateMatrixWorld();
     helper.update();
-    lightSphere.position.set(light.position.x, light.position.y, light.position.z);
 }
+DirectionalLight.position.set(100, 600, 20);
 updateLight();
 
+makeXYZGUI(gui, DirectionalLight.target.position, 'target', updateLight);
+makeFogGUI(gui, SceneFog, 'fog');
 
-export {spheretest, light , helper, lightSphere}
+
+export {DirectionalLight, AmbientLight, BeaconLight, PostLight, helper, SceneFog, gui, makeDayAndNight}
 

@@ -1,9 +1,9 @@
 import {FlatPlane} from "./Plane.js";
 import * as THREE from "three";
 import {camera} from "./CameraShader.js";
-import {light} from "./SunLight.js";
+import {DirectionalLight} from "./SunLight.js";
 import $ from "jquery";
-
+const light = DirectionalLight;
 let geometry = FlatPlane.geometry.clone();
 let material = FlatPlane.material.clone();
 
