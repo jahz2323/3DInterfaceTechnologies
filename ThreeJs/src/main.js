@@ -35,17 +35,17 @@ scene.add(objects);
 scene.add(skybox);
 
 
-const beaconTargetHelper = new THREE.Mesh(
-    new THREE.SphereGeometry(40, 16, 16),
-    new THREE.MeshBasicMaterial({color: 0xffff00})
-);
-scene.add(beaconTargetHelper);
-const postTargetHelper = new THREE.Mesh(
-    new THREE.SphereGeometry(1, 16, 16),
-    new THREE.MeshBasicMaterial({color: 0xff0000})
-);
-postTargetHelper.position.copy(PostLight.target.position);
-scene.add(postTargetHelper);
+// const beaconTargetHelper = new THREE.Mesh(
+//     new THREE.SphereGeometry(40, 16, 16),
+//     new THREE.MeshBasicMaterial({color: 0xffff00})
+// );
+// scene.add(beaconTargetHelper);
+// const postTargetHelper = new THREE.Mesh(
+//     new THREE.SphereGeometry(1, 16, 16),
+//     new THREE.MeshBasicMaterial({color: 0xff0000})
+// );
+// postTargetHelper.position.copy(PostLight.target.position);
+// scene.add(postTargetHelper);
 
 // BeaconLight helper
 const beaconHelper = new THREE.SpotLightHelper(BeaconLight);
@@ -70,8 +70,8 @@ renderer.setAnimationLoop(animate);
 
 function animate() {
     BeaconLight.target.position.x = Math.cos(Date.now() * 0.001) * 300;
-    BeaconLight.target.position.z = Math.sin(Date.now() * 0.001) * 400;
-    beaconTargetHelper.position.copy(BeaconLight.target.position);
+    BeaconLight.target.position.z = Math.sin(Date.now() * 0.001) * 300;
+    // beaconTargetHelper.position.copy(BeaconLight.target.position);
     renderer.render(scene, camera);
     // Update helpers
     beaconHelper.update();

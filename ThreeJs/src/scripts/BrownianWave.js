@@ -33,7 +33,7 @@ function animate() {
 
     // Parameters for Fractional Brownian Motion
     const layers = 30; // Number of layers (octaves)
-    const decay = 0.76; // Amplitude decay per layer
+    const decay = 0.74; // Amplitude decay per layer
 
     for (let i = 0; i < posAttribute.count; i++) {
         let x = posAttribute.getX(i);
@@ -51,14 +51,14 @@ function animate() {
         // Sum multiple layers of noise
         for (let layer = 0; layer < layers; layer++) {
             let wave1 = a_i * Math.sin(w_i * (w1_direction * (x + z)) + time * phase1 );
-            let wave2 = a_i *  Math.sin(w_i * (w1_direction * (x + z)) + time * phase1 );
+            let wave2 = a_i * 2 *  Math.sin(w_i * (w1_direction * (x + z)) + time * phase1 );
             let wave3 = a_i * 0.1 *  Math.sin(w_i * (w1_direction * (x - z)) + time * phase1 * 10);
             let wave4 = a_i * 0.01 * Math.sin(w_i * (w1_direction * (x - z)) + time * phase1  * 1000);
             let wave5 = a_i * 0.001 * Math.sin(w_i * (w1_direction * (x - z)) + time * phase1  * 1000);
             y += wave1 + wave2 + wave3 + wave4 + wave5;
 
             let normal1 = w_i * a_i * Math.cos(w_i * (w1_direction * (x + z)) + time * phase1 );
-            let normal2 = w_i * a_i * Math.cos(w_i * (w1_direction * (x + z)) + time * phase1 );
+            let normal2 = w_i * a_i * 2  * Math.cos(w_i * (w1_direction * (x + z)) + time * phase1 );
             let normal3 = w_i * a_i * 0.1 * Math.cos(w_i * (w1_direction * (x - z)) + time * phase1 * 10);
             let normal4 = w_i * a_i * 0.01 * Math.cos(w_i * (w1_direction * (x - z)) + time * phase1  * 1000);
             let normal5 = w_i * a_i * 0.001 * Math.cos(w_i * (w1_direction * (x - z)) + time * phase1  * 1000);

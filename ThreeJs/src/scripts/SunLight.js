@@ -7,16 +7,16 @@ const ambColor = 0x242424;
 const intensity = 1;
 const DirectionalLight = new THREE.DirectionalLight(color, intensity);
 const AmbientLight = new THREE.AmbientLight(ambColor, intensity);
-const BeaconLight= new THREE.SpotLight(0xffff00, 2, 800, Math.PI / 12, 0.5);
-BeaconLight.position.set(120, 300, 20); // Position at the top of the lighthouse
-BeaconLight.target.position.set(-40, 0, -100); // Point the light at a target
+const BeaconLight= new THREE.SpotLight(0xffff00, 500, 800, Math.PI / 24, 0.5);
+BeaconLight.position.set(120, 200, 0); // Position at the top of the lighthouse
+BeaconLight.target.position.set(200, 0, -200); // Point the light at a target
 BeaconLight.castShadow = true; // Enable shadows
 BeaconLight.shadow.mapSize.width = 1024; // Shadow resolution
 BeaconLight.shadow.mapSize.height = 1024;
 
-const PostLight = new THREE.SpotLight(0xff0000, 1, 80);
-PostLight.position.set(-100, 80, 0);
-PostLight.target.position.set(-100, 0, -20);
+const PostLight = new THREE.SpotLight(0xf2ea7b, 500, 100);
+PostLight.position.set(-100, 90, 0);
+PostLight.target.position.set(-100, 0, 0);
 PostLight.castShadow = true; // Enable shadows
 PostLight.shadow.mapSize.width = 1024; // Shadow resolution
 PostLight.shadow.mapSize.height = 1024;
@@ -44,8 +44,8 @@ gui.addColor(new ColorGUIHelper(BeaconLight, 'color'), 'value').name('BeaconLigh
 gui.addColor(new ColorGUIHelper(PostLight, 'color'), 'value').name('PostLightColor');
 gui.add(DirectionalLight, 'intensity', 0, 5, 0.001);
 gui.add(AmbientLight, 'intensity', 1, 5, 0.001);
-gui.add(BeaconLight, 'intensity', 5, 1000, 0.001);
-gui.add(PostLight, 'intensity', 5, 1000, 0.001);
+gui.add(BeaconLight, 'intensity', 5, 10000, 0.001);
+gui.add(PostLight, 'intensity', 5, 5000, 0.001);
 
 const helper = new THREE.DirectionalLightHelper(DirectionalLight, 'color');
 let SceneFog = new THREE.Fog(0xAAAAAA, 300, 2500);
@@ -89,7 +89,14 @@ function makeDayAndNight(gui, material) {
     });
     folder.open();
 }
-
+function makeSoundsGui(gui, sound) {
+    const folder = gui.addFolder('Sounds');
+    folder.add(sound, 'volume', 0, 1, 0.01);
+    folder.add(sound, 'play');
+    folder.add(sound, 'pause');
+    folder.add(sound, 'stop');
+    folder.open();
+}
 function updateLight() {
     DirectionalLight.target.updateMatrixWorld();
     BeaconLight.target.updateMatrixWorld();
@@ -98,7 +105,8 @@ function updateLight() {
 }
 DirectionalLight.position.set(100, 600, 20);
 updateLight();
-
+const backgroundsound = new Audio('../src/public/media/oceanwaves.mp3');
+makeSoundsGui(gui,backgroundsound );
 makeXYZGUI(gui, DirectionalLight.target.position, 'target', updateLight);
 makeFogGUI(gui, SceneFog, 'fog');
 

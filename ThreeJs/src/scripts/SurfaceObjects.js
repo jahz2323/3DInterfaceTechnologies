@@ -65,11 +65,11 @@ const CreateSceneObjects = () => {
         cylinder.position.set(p.x, p.y - 5, p.z);
         SceneObjects.add(cylinder);
     });
-
     function createCone(originx = 0, originy = 0, r, h, faces, texture) {
         let vertices = [];
         let indices = [];
         let normals = [];
+        let uvs = [];
 
         let theta = 0;
         let angle_increase = 2 * Math.PI / faces;
@@ -84,8 +84,8 @@ const CreateSceneObjects = () => {
             let x = r * Math.cos(theta);
             let y = r * Math.sin(theta);
 
-
             vertices.push(x, y, 0);
+
 
             const slope = r / h;
             let nx = Math.cos(theta);
@@ -93,6 +93,7 @@ const CreateSceneObjects = () => {
             let nz = slope;
             normals.push(nx, ny, nz);
 
+            uvs.push(nx, ny);
 
             if (i <= faces) {
                 indices.push(0, i + 1, i + 2);
@@ -102,10 +103,10 @@ const CreateSceneObjects = () => {
         const geometry = new THREE.BufferGeometry();
         geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
         geometry.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
+        geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
         geometry.setIndex(indices);
 
         const material = new THREE.MeshPhongMaterial({
-            color: 0x252525,
             map: texture,
             wireframe: false,
             shininess: 200,
@@ -114,133 +115,237 @@ const CreateSceneObjects = () => {
         const cone = new THREE.Mesh(geometry, material);
         return cone;
     }
-
     function createCylinderGeometry(r, h, faces, texture) {
         let vertices = [];
         let indices = [];
         let normals = [];
+        let uvs = [];
         let theta = 0;
-        let angle_increase = 2 * Math.PI / faces;
+        let angle_increase = (2 * Math.PI) / faces;
 
+        // Bottom center vertex
+        vertices.push(0, 0, -h / 2);
+        normals.push(0, 0, -1);
+        uvs.push(0.5, 0.5);
 
-        let x0 = r;
-        let y0 = 0;
-        let z = 0;
-        for (let i = 0; i < faces; i++) {
-            theta += angle_increase;
-            let x1 = r * Math.cos(theta);
-            let y1 = r * Math.sin(theta);
-            z = h / 2;
-            vertices.push(0, 0, 0); // start at origin
-            vertices.push(x0, y0, z);
-            vertices.push(x1, y1, z);
+        // Top center vertex
+        vertices.push(0, 0, h / 2);
+        normals.push(0, 0, 1);
+        uvs.push(0.5, 0.5);
 
-            //sides
-            vertices.push(x1, y1, z);
-            vertices.push(x0, y0, z);
-            vertices.push(x0, y0, -z);
+        // Generate side vertices, normals, and UVs
+        for (let i = 0; i <= faces; i++) {
+            theta = i * angle_increase;
+            let x = r * Math.cos(theta);
+            let y = r * Math.sin(theta);
 
-            vertices.push(x1, y1, z);
-            vertices.push(x0, y0, -z);
-            vertices.push(x1, y1, -z);
+            vertices.push(x, y, -h / 2);
+            vertices.push(x, y, h / 2);
 
-            //bottom base
-            vertices.push(x1, y1, -z);
-            vertices.push(x0, y0, -z);
-            vertices.push(0, 0, -z);
+            // Side normals (pointing outward)
+            let nx = Math.cos(theta);
+            let ny = Math.sin(theta);
+            normals.push(nx, ny, 0);
+            normals.push(nx, ny, 0);
 
-            x0 = x1;
-            y0 = y1;
+            //UVs
+            uvs.push(i / faces, 0);
+            uvs.push(i / faces, 1);
         }
+
+        // Generate indices for the sides
+        for (let i = 0; i < faces; i++) {
+            let bottomLeft = 2 + i * 2;
+            let bottomRight = 2 + (i + 1) * 2;
+            let topLeft = bottomLeft + 1;
+            let topRight = bottomRight + 1;
+
+            // Side faces (two triangles per face)
+            indices.push(bottomLeft, bottomRight, topLeft);
+            indices.push(bottomRight, topRight, topLeft);
+        }
+
+        // Generate indices for the bottom and top caps
+        for (let i = 0; i < faces; i++) {
+            let bottomCenter = 0;
+            let topCenter = 1;
+            let currentBottom = 2 + i * 2;
+            let nextBottom = 2 + ((i + 1) % faces) * 2;
+            let currentTop = currentBottom + 1;
+            let nextTop = nextBottom + 1;
+
+            // Bottom face (triangle fan)
+            indices.push(bottomCenter, nextBottom, currentBottom);
+
+            // Top face (triangle fan)
+            indices.push(topCenter, currentTop, nextTop);
+        }
+
+        // Create the geometry
         const geometry = new THREE.BufferGeometry();
         geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+        geometry.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
+        geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2)); // Optional
+        geometry.setIndex(indices);
+
+        // Create the material
         const material = new THREE.MeshPhongMaterial({
-            color: 0x00ff00,
             wireframe: false,
             map: texture,
         });
+
+        // Create the mesh
         const cylinder = new THREE.Mesh(geometry, material);
         return cylinder;
     }
-
     function createHollowCylinder(r1, r2, h, faces, texture) {
         let vertices = [];
-        let indices = [];
         let normals = [];
+        let uvs = [];
         let theta = 0;
-        let angle_increase = 2 * Math.PI / faces;
+        let angle_increase = (2 * Math.PI) / faces;
 
         let x0 = r1;
         let y0 = 0;
         let xl_0 = r2;
         let yl_0 = 0;
         let z = h / 2;
-        for (let i = 1; i < faces + 1; i++) {
-            theta += angle_increase;
+
+        for (let i = 0; i <= faces; i++) {
+            theta = i * angle_increase;
             let x1 = r1 * Math.cos(theta);
             let y1 = r1 * Math.sin(theta);
 
             let xl_1 = r2 * Math.cos(theta);
             let yl_1 = r2 * Math.sin(theta);
 
-            //top base
+            // Calculate normals for the inner and outer walls
+            const nx = Math.cos(theta);
+            const ny = Math.sin(theta);
+            const nz = 0;
+
+            // Top base (inner and outer)
             vertices.push(x0, y0, z);
             vertices.push(x1, y1, z);
             vertices.push(xl_0, yl_0, z);
 
-            //sides
+            normals.push(0, 0, 1);
+            normals.push(0, 0, 1);
+            normals.push(0, 0, 1);
+
+            uvs.push(i / faces, 0);
+            uvs.push((i + 1) / faces, 0);
+            uvs.push(i / faces, 0);
+
+            // Sides (inner wall)
             vertices.push(x1, y1, z);
             vertices.push(x0, y0, z);
             vertices.push(x0, y0, -z);
+
+            normals.push(-nx, -ny, nz);
+            normals.push(-nx, -ny, nz);
+            normals.push(-nx, -ny, nz);
+
+            uvs.push((i + 1) / faces, 0);
+            uvs.push(i / faces, 0);
+            uvs.push(i / faces, 1);
 
             vertices.push(x1, y1, z);
             vertices.push(x0, y0, -z);
             vertices.push(x1, y1, -z);
 
-            //outer walls
+            normals.push(-nx, -ny, nz);
+            normals.push(-nx, -ny, nz);
+            normals.push(-nx, -ny, nz);
+
+            uvs.push((i + 1) / faces, 0);
+            uvs.push(i / faces, 1);
+            uvs.push((i + 1) / faces, 1);
+
+            // Sides (outer wall)
             vertices.push(xl_1, yl_1, z);
             vertices.push(xl_0, yl_0, z);
             vertices.push(xl_0, yl_0, -z);
 
+            normals.push(nx, ny, nz);
+            normals.push(nx, ny, nz);
+            normals.push(nx, ny, nz);
+
+            uvs.push((i + 1) / faces, 0);
+            uvs.push(i / faces, 0);
+            uvs.push(i / faces, 1);
+
             vertices.push(xl_1, yl_1, z);
             vertices.push(xl_0, yl_0, -z);
             vertices.push(xl_1, yl_1, -z);
 
-            //bottom base
+            normals.push(nx, ny, nz);
+            normals.push(nx, ny, nz);
+            normals.push(nx, ny, nz);
+
+            uvs.push((i + 1) / faces, 0);
+            uvs.push(i / faces, 1);
+            uvs.push((i + 1) / faces, 1);
+
+            // Bottom base (inner and outer)
             vertices.push(x1, y1, -z);
             vertices.push(x0, y0, -z);
             vertices.push(xl_1, yl_1, -z);
 
+            normals.push(0, 0, -1);
+            normals.push(0, 0, -1);
+            normals.push(0, 0, -1);
+
+            uvs.push((i + 1) / faces, 1);
+            uvs.push(i / faces, 1);
+            uvs.push((i + 1) / faces, 1);
+
+            // Update for next iteration
             x0 = x1;
             y0 = y1;
-
             xl_0 = xl_1;
             yl_0 = yl_1;
         }
+
+        // Create the geometry
         const geometry = new THREE.BufferGeometry();
         geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+        geometry.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
+        geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+
+        // Create the material
         const material = new THREE.MeshPhongMaterial({
             wireframe: false,
             map: texture,
             shininess: 10,
         });
+
+        // Create the mesh
         const cylinder = new THREE.Mesh(geometry, material);
         return cylinder;
     }
-
     function CreateBuoy() {
 
     }
     function LightHouseShape(texture) {
+        // repeat for custom texture
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.clamp = THREE.ClampToEdgeWrapping;
+
+        //scale down for custom texture
+        texture.repeat.set(1, 1);
+
         const x_origin = 0;
         const y_origin = 0;
         const height = 120;
         const faces = 60;
         const angle_increase = (2 * Math.PI) / faces;
         let theta = 0;
-        const indices = [];
+
         const vertices = [];
         const normals = [];
+        const uvs = [];
 
         let r = 20; // Inner radius
         let r2 = 55; // Outer radius
@@ -269,11 +374,20 @@ const CreateSceneObjects = () => {
             normals.push(0, 0, 1);
             normals.push(0, 0, 1);
             normals.push(0, 0, 1);
+            //no texture
+            uvs.push(0, 0);
+            uvs.push(0, 0);
+            uvs.push(0, 0);
 
             // Sides (inner walls)
             vertices.push(x1, y1, z);
             vertices.push(x0, y0, z);
             vertices.push(x0, y0, -z);
+
+            //no texture
+            uvs.push(0, 0);
+            uvs.push(0, 0);
+            uvs.push(0, 0);
 
             // Normals for inner walls (pointing outward)
             const nx = Math.cos(theta);
@@ -287,37 +401,52 @@ const CreateSceneObjects = () => {
             vertices.push(x0, y0, -z);
             vertices.push(x1, y1, -z);
 
-            // Normals for inner walls (pointing outward)
+            //no texture
+            uvs.push(0, 0);
+            uvs.push(0, 0);
+            uvs.push(0, 0);
+
             normals.push(nx, ny, nz);
             normals.push(nx, ny, nz);
             normals.push(nx, ny, nz);
 
-            // Outer walls
+            // Outter walls
             vertices.push(xl_1, yl_1, z);
             vertices.push(xl_0, yl_0, z);
             vertices.push(xl_0, yl_0, -z);
 
+            uvs.push(i/faces, 1);
+            uvs.push(i/faces, 0);
+            uvs.push(i/faces, 0);
+
             // Normals for outer walls (pointing outward)
             const nxOuter = Math.cos(theta);
             const nyOuter = Math.sin(theta);
-            const nzOuter = 0;
-            normals.push(nxOuter, nyOuter, nzOuter);
-            normals.push(nxOuter, nyOuter, nzOuter);
-            normals.push(nxOuter, nyOuter, nzOuter);
+            normals.push(nxOuter, nyOuter, 0);
+            normals.push(nxOuter, nyOuter, 0);
+            normals.push(nxOuter, nyOuter, 0);
 
             vertices.push(xl_1, yl_1, z);
             vertices.push(xl_0, yl_0, -z);
             vertices.push(xl_1, yl_1, -z);
 
+            uvs.push(i/faces, 1);
+            uvs.push(i/faces, 0);
+            uvs.push(i/faces, 1);
+
             // Normals for outer walls (pointing outward)
-            normals.push(nxOuter, nyOuter, nzOuter);
-            normals.push(nxOuter, nyOuter, nzOuter);
-            normals.push(nxOuter, nyOuter, nzOuter);
+            normals.push(nxOuter, nyOuter, 0);
+            normals.push(nxOuter, nyOuter, 0);
+            normals.push(nxOuter, nyOuter, 0);
 
             // Bottom base
             vertices.push(x1, y1, -z);
             vertices.push(x0, y0, -z);
             vertices.push(x_origin, y_origin, -z);
+
+            uvs.push(xl_1, 0);
+            uvs.push(xl_0, 0);
+            uvs.push(xl_0, 0);
 
             // Normals for bottom base (pointing downward)
             normals.push(0, 0, -1);
@@ -334,7 +463,7 @@ const CreateSceneObjects = () => {
         const geometry = new THREE.BufferGeometry();
         geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
         geometry.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3)); // Add normals
-
+        geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2)); // Add UVs
         const material = new THREE.MeshPhongMaterial({
             map: texture,
             wireframe: false,
@@ -405,7 +534,6 @@ const CreateSceneObjects = () => {
         const texture = new THREE.TextureLoader().load('../src/public/textures/MetalTexture.jpg');
         const geometry = new THREE.CylinderGeometry(1, 1, 100, 12, 2);
         const material = new THREE.MeshPhongMaterial({
-            color: 0x252525,
             map: texture,
             shininess: 100,
         });
@@ -427,11 +555,11 @@ const CreateSceneObjects = () => {
     const roof_texture = new THREE.TextureLoader().load('../src/public/textures/MetalTexture.jpg');
     const window_texture = new THREE.TextureLoader().load('../src/public/textures/LightHouseWindow.jpg');
     const LightHousewall_texture = new THREE.TextureLoader().load('../src/public/textures/LighthouseWalls.webp');
-
-    let cone = createCone(0, 0, 80, 50, 12, roof_texture);
-    let walls = createHollowCylinder(50, 40, 70, 12, window_texture);
-    let centrePole = createCylinderGeometry(5, 90, 12);
-    let floor = createCylinderGeometry(80, 5, 12);
+    const floor_texture = new THREE.TextureLoader().load('../src/public/textures/MetalTexture.jpg');
+    let cone = createCone(0, 0, 80, 50, 24, roof_texture);
+    let walls = createHollowCylinder(50, 40, 70, 24, window_texture);
+    let centrePole = createCylinderGeometry(5, 90, 24);
+    let floor = createCylinderGeometry(80, 5, 24, floor_texture);
     let LampPost = createLightPost();
 
     walls.position.set(100, 175, 20);
