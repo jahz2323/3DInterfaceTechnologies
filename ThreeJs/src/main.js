@@ -21,8 +21,8 @@ const scene = new THREE.Scene();
 const objects = CreateSceneObjects();
 const {skybox, material} = SkyBox();
 
-// scene.add(plane); // sum of sines plane
-scene.add(brownianWave);
+scene.add(plane); // sum of sines plane
+// scene.add(brownianWave);
 scene.add(under_plane); // ocean floor
 scene.add(DirectionalLight);
 scene.add(AmbientLight);
