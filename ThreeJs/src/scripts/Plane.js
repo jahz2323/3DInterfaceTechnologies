@@ -80,47 +80,57 @@ plane.position.set(0, -10, 0);
 let FlatPlane = plane; // for debugging purposes
 
 
-//create sum of signs
-/*
-    Explain
+const amplitude_collection = {};
+const frequency_collection = {};
+const velocity_collection = {};
+const phase_collection = {};
+const wavelength_collection = {};
+const w_collection = {};
 
- */
-const a1 = 1.5;
-const f1 = 0.1;
-const v1 = 3;
-const wavelength1 = v1 / f1;
-const w1 = 2 / wavelength1;
-const phase1 = v1 * 2 / wavelength1;
+// Wave 1
+amplitude_collection.a1 = 1.5;
+frequency_collection.f1 = 0.1;
+velocity_collection.v1 = 3;
+wavelength_collection.wavelength1 = velocity_collection.v1 / frequency_collection.f1;
+phase_collection.phase1 = velocity_collection.v1 * 2 / wavelength_collection.wavelength1;
+w_collection.w1 = 2 / wavelength_collection.wavelength1;
 
-const a2 = 1.3;
-const f2 = 0.1;
-const v2 = 1000;
-const wavelength2 = v2 / f2;
-const w2 = 2 / wavelength2;
-const phase2 = v2 * 2 / wavelength2;
+// Wave 2
+amplitude_collection.a2 = 1.3;
+frequency_collection.f2 = 0.1;
+velocity_collection.v2 = 10;
+wavelength_collection.wavelength2 = velocity_collection.v2 / frequency_collection.f2;
+phase_collection.phase2 = velocity_collection.v2 * 2 / wavelength_collection.wavelength2;
+w_collection.w2 = 2 / wavelength_collection.wavelength2;
 
-const a3 = 5;
-const f3 = 0.4;
-const v3 = 10;
-const wavelength3 = v3 / f3;
-const w3 = 2 / wavelength3;
-const phase3 = v3 * 2 / wavelength3;
-
-const a4 = 0.1
-const f4 = 1;
-const v4 = 10;
-const wavelength4 = v4 / f4;
-const w4 = 2 / wavelength4;
-const phase4 = v4 * 2 / wavelength4;
-
-const a5 = 0.01;
-const f5 = 2;
-const v5 = 10;
-const wavelength5 = v5 / v5;
-const w5 = 2 / wavelength5;
-const phase5 = v5 * 2 / wavelength5;
+// Wave 3
+amplitude_collection.a3 = 5;
+frequency_collection.f3 = 0.4;
+velocity_collection.v3 = 10;
+wavelength_collection.wavelength3 = velocity_collection.v3 / frequency_collection.f3;
+phase_collection.phase3 = velocity_collection.v3 * 2 / wavelength_collection.wavelength3;
+w_collection.w3 = 2 / wavelength_collection.wavelength3;
 
 
+// Wave 4
+amplitude_collection.a4 = 0.1;
+frequency_collection.f4 = 1;
+velocity_collection.v4 = 10;
+wavelength_collection.wavelength4 = velocity_collection.v4 / frequency_collection.f4;
+phase_collection.phase4 = velocity_collection.v4 * 2 / wavelength_collection.wavelength4;
+w_collection.w4 = 2 / wavelength_collection.wavelength4;
+
+
+// Wave 5
+amplitude_collection.a5 = 0.01;
+frequency_collection.f5 = 2;
+velocity_collection.v5 = 10;
+wavelength_collection.wavelength5 = velocity_collection.v5 / frequency_collection.f5;
+phase_collection.phase5 = velocity_collection.v5 * 2 / wavelength_collection.wavelength5;
+w_collection.w5 = 2 / wavelength_collection.wavelength5;
+
+
+export{amplitude_collection, frequency_collection, velocity_collection, phase_collection, wavelength_collection, w_collection}
 const posAttribute = geometry.getAttribute('position');
 const normAttribute = geometry.getAttribute('normal');
 const seaBedPos = geometry2.getAttribute('position');
@@ -153,33 +163,33 @@ function animate() {
         // - Optimised gerstner waves using exponent of sin
 
         // y =
-        //     a1 * Math.sin(w1 * (x - z) + time * phase1)
-        //     + a2 * Math.sin(w2 * (x + z) + time * phase2)
-        //     + a3 * Math.sin(w3 * (x + z) + time * phase3)
+        //     a1 * Math.sin(w1 * (x - z) + time * phase_collection.phase1)
+        //     + a2 * Math.sin(w2 * (x + z) + time * phase_collection.phase2)
+        //     + a3 * Math.sin(w3 * (x + z) + time * phase_collection.phase3)
         //     + a4 * Math.sin(w5 * (-x) + time * phase5)
         //     + a5 * Math.sin(w5 * (z) + time * phase5)
         // ;
         y =
-            a1 * Math.exp(Math.sin(w1 * (x - z) + time * phase1)) +
-            a2 * Math.exp(Math.sin(w2 * (x + z) + time * phase2)) +
-            a3 * Math.exp(Math.sin(w3 * (x + z) + time * phase3)) +
-            a4 * Math.exp(Math.sin(w4 * (-x) + time * phase4)) +
-            a5 * Math.exp(Math.sin(w5 * (z) + time * phase5))
+            amplitude_collection.a1 * Math.exp(Math.sin(w_collection.w1 * (x - z) + time * phase_collection.phase1)) +
+            amplitude_collection.a2 * Math.exp(Math.sin(w_collection.w2 * (x + z) + time * phase_collection.phase2)) +
+            amplitude_collection.a3 * Math.exp(Math.sin(w_collection.w3 * (x + z) + time * phase_collection.phase3)) +
+            amplitude_collection.a4 * Math.exp(Math.sin(w_collection.w4 * (-x) + time * phase_collection.phase4)) +
+            amplitude_collection.a5 * Math.exp(Math.sin(w_collection.w5 * (z) + time * phase_collection.phase5))
         ;
 
         // let dydx =
-        //     w1 * a1 * Math.cos(w1 * (x - z) + time * phase1) +
-        //     w2 * a2 * Math.cos(w2 * (x + z) + time * phase2) +
-        //     w3 * a3 * Math.cos(w3 * (x + z) + time * phase3) +
-        //     w4 * a4 * Math.sin(w4 * (-x) + time * phase4) +
-        //     w5 * a5 * Math.sin(w5 * (z) + time * phase5)
+        //     w1 * amplitude_collection.a1 * Math.cos(w1 * (x - z) + time * phase_collection.phase1) +
+        //     w2 * amplitude_collection.a2 * Math.cos(w2 * (x + z) + time * phase_collection.phase2) +
+        //     w3 * amplitude_collection.a3 * Math.cos(w3 * (x + z) + time * phase_collection.phase3) +
+        //     w4 * amplitude_collection.a4 * Math.sin(w4 * (-x) + time * phase_collection.phase4) +
+        //     w5 * amplitude_collection.a5 * Math.sin(w5 * (z) + time * phase_collection.phase5)
 
         let dydx =
-            w1 * a1 * Math.exp(Math.sin(w1 * (x - z) + time * phase1)) * Math.cos(w1 * (x - z) + time * phase1) +
-            w2 * a2 * Math.exp(Math.sin(w2 * (x + z) + time * phase2)) * Math.cos(w2 * (x + z) + time * phase2) +
-            w3 * a3 * Math.exp(Math.sin(w3 * (x + z) + time * phase3)) * Math.cos(w3 * (x + z) + time * phase3) +
-            w4 * a4 * Math.exp(Math.sin(w4 * (-x) + time * phase4)) * Math.cos(w4 * (-x) + time * phase4) +
-            w5 * a5 * Math.exp(Math.sin(w5 * (z) + time * phase5)) * Math.cos(w5 * (z) + time * phase5)
+            w_collection.w1 * amplitude_collection.a1 * Math.exp(Math.sin(w_collection.w1 * (x - z) + time * phase_collection.phase1)) * Math.cos(w_collection.w1 * (x - z) + time * phase_collection.phase1) +
+            w_collection.w2 * amplitude_collection.a2 * Math.exp(Math.sin(w_collection.w2 * (x + z) + time * phase_collection.phase2)) * Math.cos(w_collection.w2 * (x + z) + time * phase_collection.phase2) +
+            w_collection.w3 * amplitude_collection.a3 * Math.exp(Math.sin(w_collection.w3 * (x + z) + time * phase_collection.phase3)) * Math.cos(w_collection.w3 * (x + z) + time * phase_collection.phase3) +
+            w_collection.w4 * amplitude_collection.a4 * Math.exp(Math.sin(w_collection.w4 * (-x) + time * phase_collection.phase4)) *    Math.cos(w_collection.w4 * (-x) + time * phase_collection.phase4) +
+            w_collection.w5 * amplitude_collection.a5 * Math.exp(Math.sin(w_collection.w5 * (z) + time * phase_collection.phase5)) *     Math.cos(w_collection.w5 * (z) + time * phase_collection.phase5)
         ;
         let dydz = dydx
 

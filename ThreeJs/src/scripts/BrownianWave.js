@@ -1,9 +1,6 @@
 import {FlatPlane} from "./Plane.js";
 import * as THREE from "three";
-import {camera} from "./CameraShader.js";
-import {DirectionalLight} from "./SunLight.js";
-import $ from "jquery";
-const light = DirectionalLight;
+
 let geometry = FlatPlane.geometry.clone();
 let material = FlatPlane.material.clone();
 
@@ -90,11 +87,5 @@ function animate() {
     // Request next frame
     requestAnimationFrame(animate);
 }
-
 animate();
-
-$(document).ready(function () {
-    // console.log(posAttribute);
-});
-
 export { brownianWave };
