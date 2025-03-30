@@ -22,15 +22,15 @@ import {
     makeSoundsGui,
 } from "./scripts/SceneUI.js";
 
-import {camera, renderer} from "./scripts/CameraShader.js";
+import {camera, renderer} from "./scripts/Camera.js";
 import {CreateSceneObjects} from "./scripts/SurfaceObjects.js";
-import {brownianWave} from "./scripts/BrownianWave.js";
 import {SkyBox} from "./scripts/SkyBox.js";
-
+import {brownianWave} from "./scripts/BrownianWave.js";
 const scene = new THREE.Scene();
 
 const objects = CreateSceneObjects();
 const {skybox, material} = SkyBox();
+
 
 // scene.add(plane); // sum of sines plane
 // scene.add(brownianWave);

@@ -1,8 +1,5 @@
 import * as THREE from "three";
 import $ from "jquery";
-import {camera} from "./CameraShader.js";
-import {DirectionalLight, BeaconLight} from "./SunLight.js";
-
 
 /**
  *  Function createPlane
@@ -37,7 +34,6 @@ for (let i = 0; i < gridSize - 1; i++) {
         const e = i * gridSize + j;
         indices.push(a, d, b);
         indices.push(c, d, e);
-
     }
 }
 
@@ -77,8 +73,8 @@ under_plane.position.set(0, -20, 0)
 let plane = new THREE.Mesh(geometry, texture_map);
 plane.position.set(0, -10, 0);
 
-let FlatPlane = plane; // for debugging purposes
-
+const FlatPlane = plane;
+export {FlatPlane};
 
 const amplitude_collection = {};
 const frequency_collection = {};
@@ -87,7 +83,7 @@ const phase_collection = {};
 const wavelength_collection = {};
 const w_collection = {};
 
-// Wave 1
+//Wave 1
 amplitude_collection.a1 = 1.5;
 frequency_collection.f1 = 0.1;
 velocity_collection.v1 = 3;
@@ -95,7 +91,7 @@ wavelength_collection.wavelength1 = velocity_collection.v1 / frequency_collectio
 phase_collection.phase1 = velocity_collection.v1 * 2 / wavelength_collection.wavelength1;
 w_collection.w1 = 2 / wavelength_collection.wavelength1;
 
-// Wave 2
+//Wave 2
 amplitude_collection.a2 = 1.3;
 frequency_collection.f2 = 0.1;
 velocity_collection.v2 = 10;
@@ -103,7 +99,7 @@ wavelength_collection.wavelength2 = velocity_collection.v2 / frequency_collectio
 phase_collection.phase2 = velocity_collection.v2 * 2 / wavelength_collection.wavelength2;
 w_collection.w2 = 2 / wavelength_collection.wavelength2;
 
-// Wave 3
+//Wave 3
 amplitude_collection.a3 = 5;
 frequency_collection.f3 = 0.4;
 velocity_collection.v3 = 10;
@@ -111,8 +107,7 @@ wavelength_collection.wavelength3 = velocity_collection.v3 / frequency_collectio
 phase_collection.phase3 = velocity_collection.v3 * 2 / wavelength_collection.wavelength3;
 w_collection.w3 = 2 / wavelength_collection.wavelength3;
 
-
-// Wave 4
+//Wave 4
 amplitude_collection.a4 = 0.1;
 frequency_collection.f4 = 1;
 velocity_collection.v4 = 10;
@@ -120,8 +115,7 @@ wavelength_collection.wavelength4 = velocity_collection.v4 / frequency_collectio
 phase_collection.phase4 = velocity_collection.v4 * 2 / wavelength_collection.wavelength4;
 w_collection.w4 = 2 / wavelength_collection.wavelength4;
 
-
-// Wave 5
+//Wave 5
 amplitude_collection.a5 = 0.01;
 frequency_collection.f5 = 2;
 velocity_collection.v5 = 10;
@@ -219,4 +213,4 @@ $(document).ready(function () {
 });
 
 
-export {plane, under_plane, FlatPlane};
+export {plane, under_plane};

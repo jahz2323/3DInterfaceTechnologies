@@ -1,9 +1,5 @@
-import {GUI} from "three/addons/libs/lil-gui.module.min.js";
-import {plane} from "./Plane.js";
-import {brownianWave} from "./BrownianWave.js";
-import * as THREE from "three";
 
-const scene = new THREE.Scene();
+import * as THREE from "three";
 const color = 0x433274;
 const ambColor = 0x242424;
 const intensity = 1;

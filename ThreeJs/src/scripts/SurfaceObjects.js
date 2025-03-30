@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import {WebGLRenderList as vertices} from "three/src/renderers/webgl/WebGLRenderLists.js";
 
 /**
  *  Custom objects
@@ -12,7 +11,6 @@ const CreateSceneObjects = () => {
     const SceneObjects = new THREE.Group();
     const cylinderheight = 30;
     const cylinderradius = 2;
-    const spacing = 30;
     const pier_texture = new THREE.TextureLoader().load('../src/public/textures/woodplankstex.jpg');
 
     // Planks for Pier
@@ -32,7 +30,7 @@ const CreateSceneObjects = () => {
         {x: -100, y: 11, z: 15},
     ];
 
-    platform_positions.forEach((p, index) => {
+    platform_positions.forEach((p) => {
         const platform = new THREE.BoxGeometry(35, 1, 5);
         const material = new THREE.MeshPhongMaterial({
             color: 0x8d602e,
@@ -55,7 +53,7 @@ const CreateSceneObjects = () => {
         {x: -100, y: 0, z: 30},
         {x: 20, y: 0, z: 30},
     ];
-    positions.forEach((p, index) => {
+    positions.forEach((p) => {
         const geometry = new THREE.CylinderGeometry(cylinderradius, cylinderradius, cylinderheight, 32);
         const material = new THREE.MeshPhongMaterial({
             color: 0x2e2207,
@@ -73,11 +71,7 @@ const CreateSceneObjects = () => {
 
         let theta = 0;
         let angle_increase = 2 * Math.PI / faces;
-        let x0 = r;
-        let y0 = 0;
-        let z = h;
-
-        vertices.push(originx, originy, z);
+        vertices.push(originx, originy, h);
 
         for (let i = 0; i <= faces; i++) {
             theta = i * angle_increase;
@@ -85,7 +79,6 @@ const CreateSceneObjects = () => {
             let y = r * Math.sin(theta);
 
             vertices.push(x, y, 0);
-
 
             const slope = r / h;
             let nx = Math.cos(theta);
@@ -242,9 +235,9 @@ const CreateSceneObjects = () => {
             vertices.push(x0, y0, z);
             vertices.push(x0, y0, -z);
 
-            normals.push(-nx, -ny, nz);
-            normals.push(-nx, -ny, nz);
-            normals.push(-nx, -ny, nz);
+            normals.push(nx, ny, 0);
+            normals.push(nx, ny, 0);
+            normals.push(nx, ny, 0);
 
             uvs.push((i + 1) / faces, 0);
             uvs.push(i / faces, 0);
@@ -254,9 +247,9 @@ const CreateSceneObjects = () => {
             vertices.push(x0, y0, -z);
             vertices.push(x1, y1, -z);
 
-            normals.push(-nx, -ny, nz);
-            normals.push(-nx, -ny, nz);
-            normals.push(-nx, -ny, nz);
+            normals.push(nx, ny, 0);
+            normals.push(nx, ny, 0);
+            normals.push(nx, ny, 0);
 
             uvs.push((i + 1) / faces, 0);
             uvs.push(i / faces, 1);
@@ -324,9 +317,7 @@ const CreateSceneObjects = () => {
         const cylinder = new THREE.Mesh(geometry, material);
         return cylinder;
     }
-    function CreateBuoy() {
 
-    }
     function LightHouseShape(texture) {
         // repeat for custom texture
         texture.wrapS = THREE.RepeatWrapping;
@@ -485,7 +476,6 @@ const CreateSceneObjects = () => {
         let r = 50;
 
         const vertices = [];
-        const indices = [];
 
         let z = 0;
         let faces = 20; // change for detail
@@ -513,11 +503,10 @@ const CreateSceneObjects = () => {
         const geometry = new THREE.BufferGeometry();
         geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
         const material = new THREE.MeshBasicMaterial({color: 0x0000ff});
-        const stars = new THREE.Mesh(geometry, material);
-        stars.rotateY(Math.PI / 2);
-        stars.rotateY(Math.PI / 2);
-        stars.position.set(100, 20, 20);
-        SceneObjects.add(stars);
+        const stairs = new THREE.Mesh(geometry, material);
+
+        stairs.position.set(100, 20, 20);
+        SceneObjects.add(stairs);
     }
     function createBase() {
         const geometry = new THREE.CylinderGeometry(50, 100, 50, 12, 2);
@@ -556,11 +545,10 @@ const CreateSceneObjects = () => {
     const window_texture = new THREE.TextureLoader().load('../src/public/textures/LightHouseWindow.jpg');
     const LightHousewall_texture = new THREE.TextureLoader().load('../src/public/textures/LighthouseWalls.webp');
     const floor_texture = new THREE.TextureLoader().load('../src/public/textures/MetalTexture.jpg');
-    let cone = createCone(0, 0, 80, 50, 24, roof_texture);
-    let walls = createHollowCylinder(50, 40, 70, 24, window_texture);
-    let centrePole = createCylinderGeometry(5, 90, 24);
-    let floor = createCylinderGeometry(80, 5, 24, floor_texture);
-    let LampPost = createLightPost();
+    let cone = createCone(0, 0, 80, 50, 32, roof_texture);
+    let walls = createHollowCylinder(50, 40, 70, 32, window_texture);
+    let centrePole = createCylinderGeometry(5, 90, 32);
+    let floor = createCylinderGeometry(80, 5, 32, floor_texture);
 
     walls.position.set(100, 175, 20);
     walls.rotateX(Math.PI / 2);
@@ -583,6 +571,7 @@ const CreateSceneObjects = () => {
     LightHouseShape(LightHousewall_texture);
     createStairs();
     createBase();
+    createLightPost();
 
     return SceneObjects;
 }
