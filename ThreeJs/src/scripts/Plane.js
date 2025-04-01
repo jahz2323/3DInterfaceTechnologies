@@ -68,6 +68,8 @@ let texture_map = new THREE.MeshPhongMaterial({
     flatShading: false,
     envMap: null,
     shininess: 20,
+    transparent: true,
+    opacity: 0.6,
 })
 
 let under_plane = new THREE.Mesh(geometry2, OceanFloorMap);
