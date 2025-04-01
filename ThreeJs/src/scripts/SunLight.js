@@ -7,7 +7,7 @@ const DirectionalLight = new THREE.DirectionalLight(color, intensity);
 const AmbientLight = new THREE.AmbientLight(ambColor, intensity);
 const BeaconLight = new THREE.SpotLight(0xffff00, 500, 800, Math.PI / 24, 0.5);
 
-BeaconLight.position.set(120, 200, 0); // Position at the top of the lighthouse
+BeaconLight.position.set(100, 200, 20); // Position at the top of the lighthouse
 BeaconLight.target.position.set(200, 0, -200); // Point the light at a target
 BeaconLight.castShadow = true; // Enable shadows
 BeaconLight.shadow.mapSize.width = 1024; // Shadow resolution

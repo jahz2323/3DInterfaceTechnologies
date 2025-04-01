@@ -59,7 +59,6 @@ scene.fog = SceneFog;
 const backgroundsound = new Audio('../src/public/media/oceanwaves.mp3');
 /**
   set up the GUIs
-
  */
 const gui = new GUI();
 makeSoundsGui(gui, backgroundsound);
@@ -94,7 +93,5 @@ function animate() {
     // console.log("Current Light posiiton: ", light.position.x, light.position.y, light.position.z);
     // console.log("Current Light-target position: ", light.target.position.x, light.target.position.y, light.target.position.z);
 }
-
-
 animate();
 

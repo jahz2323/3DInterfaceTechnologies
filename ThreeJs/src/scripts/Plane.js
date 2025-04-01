@@ -17,6 +17,7 @@ let spaceing = 15;
 
 const vertices = [];
 const normals = [];
+// 2d Plane mesh of size gridSize x gridSize
 for (let i = -50; i < gridSize - 50; i++) {
     for (let j = -50; j < gridSize - 50; j++) {
         vertices.push(i * spaceing, j * spaceing, 0);
@@ -25,6 +26,7 @@ for (let i = -50; i < gridSize - 50; i++) {
 }
 
 const indices = [];
+// indexed geometry
 for (let i = 0; i < gridSize - 1; i++) {
     for (let j = 0; j < gridSize - 1; j++) {
         const a = i * gridSize + j;

@@ -311,6 +311,9 @@ const CreateSceneObjects = () => {
             wireframe: false,
             map: texture,
             shininess: 10,
+            color: 0x2ccbd3,
+            opacity: 0.5,
+            transparent: true,
         });
 
         // Create the mesh
