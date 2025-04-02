@@ -26,8 +26,16 @@ import {camera, renderer} from "./scripts/Camera.js";
 import {CreateSceneObjects} from "./scripts/SurfaceObjects.js";
 import {SkyBox} from "./scripts/SkyBox.js";
 import {brownianWave} from "./scripts/BrownianWave.js";
+import Stats from "three/examples/jsm/libs/stats.module.js";
 const scene = new THREE.Scene();
-
+const stats = new Stats();
+stats.showPanel(0)
+document.body.appendChild(stats.dom);
+const tick = () => {
+    stats.update();
+    renderer.render(scene, camera);
+    window.requestAnimationFrame(tick);
+}
 const objects = CreateSceneObjects();
 const {skybox, material} = SkyBox();
 

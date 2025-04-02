@@ -64,6 +64,14 @@ const CreateSceneObjects = () => {
         SceneObjects.add(cylinder);
     });
     function createCone(originx = 0, originy = 0, r, h, faces, texture) {
+        // repeat for custom texture
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.clamp = THREE.ClampToEdgeWrapping;
+
+        //scale down for custom texture
+        texture.repeat.set(1, 1);
+
         let vertices = [];
         let indices = [];
         let normals = [];
@@ -71,7 +79,7 @@ const CreateSceneObjects = () => {
 
         let theta = 0;
         let angle_increase = 2 * Math.PI / faces;
-        vertices.push(originx, originy, h);
+        vertices.push(originx, originy, r);
 
         for (let i = 0; i <= faces; i++) {
             theta = i * angle_increase;
@@ -86,10 +94,10 @@ const CreateSceneObjects = () => {
             let nz = slope;
             normals.push(nx, ny, nz);
 
-            uvs.push(nx, ny);
+            uvs.push(i/faces, i/faces);
 
-            if (i <= faces) {
-                indices.push(0, i + 1, i + 2);
+            if (i < faces) {
+                indices.push(i + 1,i + 2 , 0);
             }
         }
         indices.push(0, faces, 1);
@@ -222,12 +230,12 @@ const CreateSceneObjects = () => {
             vertices.push(x1, y1, z);
             vertices.push(xl_0, yl_0, z);
 
-            normals.push(0, 0, 1);
-            normals.push(0, 0, 1);
-            normals.push(0, 0, 1);
+            normals.push(0, 1, 0);
+            normals.push(0, 1, 0);
+            normals.push(0, 1, 0);
 
             uvs.push(i / faces, 0);
-            uvs.push((i + 1) / faces, 0);
+            uvs.push(i / faces, 0);
             uvs.push(i / faces, 0);
 
             // Sides (inner wall)
@@ -235,9 +243,9 @@ const CreateSceneObjects = () => {
             vertices.push(x0, y0, z);
             vertices.push(x0, y0, -z);
 
-            normals.push(nx, ny, 0);
-            normals.push(nx, ny, 0);
-            normals.push(nx, ny, 0);
+            normals.push(nx, ny, nz);
+            normals.push(nx, ny, nz);
+            normals.push(nx, ny, nz);
 
             uvs.push((i + 1) / faces, 0);
             uvs.push(i / faces, 0);
@@ -247,9 +255,9 @@ const CreateSceneObjects = () => {
             vertices.push(x0, y0, -z);
             vertices.push(x1, y1, -z);
 
-            normals.push(nx, ny, 0);
-            normals.push(nx, ny, 0);
-            normals.push(nx, ny, 0);
+            normals.push(nx, ny, nz);
+            normals.push(nx, ny, nz);
+            normals.push(nx, ny, nz);
 
             uvs.push((i + 1) / faces, 0);
             uvs.push(i / faces, 1);
@@ -320,12 +328,10 @@ const CreateSceneObjects = () => {
         const cylinder = new THREE.Mesh(geometry, material);
         return cylinder;
     }
-
     function LightHouseShape(texture) {
         // repeat for custom texture
         texture.wrapS = THREE.RepeatWrapping;
         texture.wrapT = THREE.RepeatWrapping;
-        texture.clamp = THREE.ClampToEdgeWrapping;
 
         //scale down for custom texture
         texture.repeat.set(1, 1);
@@ -359,15 +365,23 @@ const CreateSceneObjects = () => {
 
             let z = height / 2;
 
+            // Normals for inner walls (pointing outward)
+            const nx = Math.cos(theta);
+            const ny = Math.sin(theta);
+            const nz = 0;
+
+            // Normals for outer walls (pointing outward)
+            const nxOuter = Math.cos(theta);
+            const nyOuter = Math.sin(theta);
             // Top base
             vertices.push(x_origin, y_origin, z);
             vertices.push(x0, y0, z);
             vertices.push(x1, y1, z);
 
             // Normals for top base (pointing upward)
-            normals.push(0, 0, 1);
-            normals.push(0, 0, 1);
-            normals.push(0, 0, 1);
+            normals.push(0, 1, 0);
+            normals.push(0, 1, 0);
+            normals.push(0, 1, 0);
             //no texture
             uvs.push(0, 0);
             uvs.push(0, 0);
@@ -383,13 +397,9 @@ const CreateSceneObjects = () => {
             uvs.push(0, 0);
             uvs.push(0, 0);
 
-            // Normals for inner walls (pointing outward)
-            const nx = Math.cos(theta);
-            const ny = Math.sin(theta);
-            const nz = 0;
-            normals.push(nx, ny, nz);
-            normals.push(nx, ny, nz);
-            normals.push(nx, ny, nz);
+            normals.push(nxOuter, nyOuter, 0);
+            normals.push(nxOuter, nyOuter, 0);
+            normals.push(nxOuter, nyOuter, 0);
 
             vertices.push(x1, y1, z);
             vertices.push(x0, y0, -z);
@@ -400,9 +410,9 @@ const CreateSceneObjects = () => {
             uvs.push(0, 0);
             uvs.push(0, 0);
 
-            normals.push(nx, ny, nz);
-            normals.push(nx, ny, nz);
-            normals.push(nx, ny, nz);
+            normals.push(nxOuter, nyOuter, 0);
+            normals.push(nxOuter, nyOuter, 0);
+            normals.push(nxOuter, nyOuter, 0);
 
             // Outter walls
             vertices.push(xl_1, yl_1, z);
@@ -413,9 +423,6 @@ const CreateSceneObjects = () => {
             uvs.push(i/faces, 0);
             uvs.push(i/faces, 0);
 
-            // Normals for outer walls (pointing outward)
-            const nxOuter = Math.cos(theta);
-            const nyOuter = Math.sin(theta);
             normals.push(nxOuter, nyOuter, 0);
             normals.push(nxOuter, nyOuter, 0);
             normals.push(nxOuter, nyOuter, 0);
@@ -443,9 +450,9 @@ const CreateSceneObjects = () => {
             uvs.push(xl_0, 0);
 
             // Normals for bottom base (pointing downward)
-            normals.push(0, 0, -1);
-            normals.push(0, 0, -1);
-            normals.push(0, 0, -1);
+            normals.push(0, -1, 0);
+            normals.push(0, -1, 0);
+            normals.push(0, -1, 0);
 
             x0 = x1;
             y0 = y1;

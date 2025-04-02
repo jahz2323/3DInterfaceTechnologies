@@ -32,8 +32,8 @@ function makeLightGui(gui) {
     gui.addColor(new ColorGUIHelper(PostLight, 'color'), 'value').name('PostLightColor');
     gui.add(DirectionalLight, 'intensity', 0, 5, 0.001);
     gui.add(AmbientLight, 'intensity', 1, 5, 0.001);
-    gui.add(BeaconLight, 'intensity', 5, 10000, 0.001);
-    gui.add(PostLight, 'intensity', 5, 5000, 0.001);
+    gui.add(BeaconLight, 'intensity', 5, 20000, 0.1);
+    gui.add(PostLight, 'intensity', 5, 20000, 0.1);
 }
 
 function makeXYZGUI(gui, vector3, name, onChangeFn) {

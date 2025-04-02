@@ -67,9 +67,9 @@ let texture_map = new THREE.MeshPhongMaterial({
     specular: new THREE.Color(1, 1, 1),
     flatShading: false,
     envMap: null,
-    shininess: 20,
+    shininess: 70,
     transparent: true,
-    opacity: 0.6,
+    opacity: 0.9,
 })
 
 let under_plane = new THREE.Mesh(geometry2, OceanFloorMap);
@@ -202,6 +202,7 @@ function animate() {
         let Normal = T_normalized.clone().cross(B_normalized);
         Normal.normalize();
         // N . L = cos(theta)
+        //Three js handles the dot product of the normal and light direction
         normAttribute.setXYZ(i, Normal.x, Normal.y, Normal.z);
         seaBedNorm.setXYZ(i, Normal.x, Normal.y, Normal.z);
     }

@@ -1,11 +1,11 @@
 
 import * as THREE from "three";
-const color = 0x433274;
-const ambColor = 0x242424;
+const color = 0xfcc5ad;
+const ambColor = 0x0c695e;
 const intensity = 1;
 const DirectionalLight = new THREE.DirectionalLight(color, intensity);
 const AmbientLight = new THREE.AmbientLight(ambColor, intensity);
-const BeaconLight = new THREE.SpotLight(0xffff00, 500, 800, Math.PI / 24, 0.5);
+const BeaconLight = new THREE.SpotLight(0xffff00, 500, 800, Math.PI / 24, 1);
 
 BeaconLight.position.set(100, 200, 20); // Position at the top of the lighthouse
 BeaconLight.target.position.set(200, 0, -200); // Point the light at a target
@@ -22,6 +22,7 @@ PostLight.shadow.mapSize.height = 1024;
 
 const helper = new THREE.DirectionalLightHelper(DirectionalLight, 'color');
 
+//
 function updateLight() {
     DirectionalLight.target.updateMatrixWorld();
     BeaconLight.target.updateMatrixWorld();
