@@ -115,7 +115,7 @@ function makeWavesGui(scene, gui, plane, brownianWave) {
         const subfolder = folder.addFolder(name);
         for (const key in collection) {
             subfolder.add(collection, key, min, max, step).name(key).onChange(() => {
-                // Update the corresponding plane property (if needed)
+                // Update the corresponding plane property
                 plane[key] = collection[key];
                 updatewave();
             });
@@ -138,7 +138,7 @@ function makeWavesGui(scene, gui, plane, brownianWave) {
         }
     });
 
-    folder.open();;
+    folder.open();
 }
 
 export {
