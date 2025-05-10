@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import $ from "jquery";
 
 /**
  *  Function createPlane
@@ -213,9 +212,7 @@ function animate() {
 }
 
 animate();
-$(document).ready(function () {
-    // console.log(posAttribute);
-});
+
 
 
 export {plane, under_plane};

@@ -1,8 +1,9 @@
 import http from 'http';
 import fs from 'fs/promises';
 import path from 'path';
+import { WebSocketServer } from 'ws'; // Correct import
 
-const hostname = '127.0.0.1';
+const hostname = '0.0.0.0';
 const port = 3000;
 
 // Base directory of the project
@@ -40,7 +41,32 @@ const server = http.createServer(async (req, res) => {
     }
 });
 
-// Start the server
+// WebSocket Server Setup (attached to the HTTP server)
+const wss = new WebSocketServer({ server: server });
+
+wss.on('connection', ws => {
+    console.log('Client connected');
+
+    ws.on('message', message => {
+        console.log('Received:', message.toString());
+        ws.send(`Server received: ${message}`);
+    });
+
+    ws.on('close', () => {
+        console.log('Client disconnected');
+    });
+
+    ws.on('error', error => {
+        console.error('WebSocket error:', error);
+    });
+
+    ws.send('Welcome to the WebSocket server!');
+});
+
+// Start the HTTP server (which will also handle WebSocket connections)
 server.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
+    console.log(`WebSocket server also running on the same port`);
 });
+
+

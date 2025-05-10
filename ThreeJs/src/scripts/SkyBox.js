@@ -1,8 +1,6 @@
 import * as THREE from "three";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
 import { PMREMGenerator} from "three";
-import {renderer} from "./Camera.js";
-
 /**
  * Function createSkyBox
  * @Params()

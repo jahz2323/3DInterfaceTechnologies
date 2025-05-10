@@ -14,7 +14,8 @@
   "private": true,
   "dependencies": {
     "jquery": "^3.7.1",
-    "three": "^0.174.0"
+    "three": "^0.174.0",
+    "ws": "^8.18.2"
   },
   "devDependencies": {
     "vite": "^6.2.1"

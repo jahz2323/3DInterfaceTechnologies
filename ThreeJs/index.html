@@ -4,8 +4,21 @@
     <link href="favicon.ico" rel="icon" type="image/x-icon">
     <meta charset="UTF-8">
     <title>SceneRender</title>
-    <link rel="stylesheet" href="../ThreeJs/src/styles/styles.css" type="text/css">
-    <script src="src/scripts/Plane.js" type="module"></script>
+<!--    <link rel="stylesheet" href="../ThreeJs/src/styles/styles.css" type="text/css">-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.174.0/three.core.js"
+            integrity="sha512-UlBnid/liin+EDOXNRQ8HbqF30WPD20uUtvbMzu0yKtBVFb3r1thfp/vR8d2HXuKKaG3MHIcosq5E29oBK4Dfg=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "./node_modules/three/build/three.module.js",
+                "three/addons/": "./node_modules/three/examples/jsm/",
+                "lil-gui": "./node_modules/three/examples/jsm/libs/lil-gui.module.min.js",
+                "three/examples/jsm/libs/stats.module.js": "./node_modules/three/examples/jsm/libs/stats.module.js",
+                  "three/examples/jsm/loaders/RGBELoader": "./node_modules/three/examples/jsm/loaders/RGBELoader.js"
+            }
+        }
+    </script>
 </head>
 
 
@@ -21,8 +34,8 @@
         ThreeJs 3D Scene
     </h1>
 </div>
-<script src="./src/main.js" type="module">
-
-</script>
 </body>
+<script type="module" src="src/scripts/DeviceManager.js"></script>
+<script type="module" src="./src/main.js">
+</script>
 </html>

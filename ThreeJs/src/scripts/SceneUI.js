@@ -44,7 +44,7 @@ function makeXYZGUI(gui, vector3, name, onChangeFn) {
     folder.open();
 }
 
-function makeFogGUI(scene, gui, fog, renderer) {
+function makeFogGUI(scene, gui, fog) {
     const folder = gui.addFolder("fog");
     //add color control
     folder.addColor(new ColorGUIHelper(fog, 'color'), 'value').name('color');
