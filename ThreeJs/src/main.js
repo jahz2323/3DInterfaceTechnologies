@@ -3,7 +3,8 @@ import {GUI} from "three/addons/libs/lil-gui.module.min.js";
 import {OrbitControls} from "three/addons/controls/OrbitControls.js";
 import {
     plane,
-    under_plane
+    under_plane,
+    cubeCamera
 
 } from "./scripts/Plane.js"
 import {
@@ -51,14 +52,14 @@ const controls = new OrbitControls(camera, renderer.domElement);
 
 // scene.add(plane); // sum of sines plane
 // scene.add(brownianWave);
-scene.add(under_plane); // ocean floor
+// scene.add(under_plane); // ocean floor
 scene.add(DirectionalLight);
 scene.add(AmbientLight);
 scene.add(BeaconLight);
 scene.add(PostLight);
 scene.add(helper);
 scene.add(objects);
-scene.add(skybox);
+// scene.add(skybox);
 
 // BeaconLight helper
 const beaconHelper = new THREE.SpotLightHelper(BeaconLight);
@@ -98,6 +99,9 @@ function animate() {
 
     // Render the scene with the stereo effect
     effect.render(scene, camera);
+    plane.visible = false;
+    cubeCamera.update(renderer, scene);
+    plane.visible = true;
 }
 
 window.addEventListener("resize", () => {

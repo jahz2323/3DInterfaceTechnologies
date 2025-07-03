@@ -1,14 +1,6 @@
 import * as THREE from "three";
 import {AmbientLight, BeaconLight, DirectionalLight, PostLight} from "./SunLight.js";
-import {
-    amplitude_collection,
-    frequency_collection,
-    velocity_collection,
-    phase_collection,
-    wavelength_collection,
-    w_collection
-} from "./Plane.js";
-
+import {waves} from "./Plane.js";
 
 class ColorGUIHelper {
     constructor(object, prop) {
@@ -86,15 +78,14 @@ function makeSoundsGui(gui, sound) {
     folder.open();
 }
 
-function updatewave() {
-    for (let i = 1; i <= 5; i++) {
-        wavelength_collection[`wavelength${i}`] =
-            velocity_collection[`v${i}`] / frequency_collection[`f${i}`];
-        w_collection[`w${i}`] = 2 / wavelength_collection[`wavelength${i}`];
-        phase_collection[`phase${i}`] =
-            velocity_collection[`v${i}`] * 2 / wavelength_collection[`wavelength${i}`];
-    }
-}
+
+function updateWaveParameters() {
+    waves.forEach((wave) => {
+        wave.k = (2 * Math.PI) / wave.wavelength; // Wave number (k = 2pi / lambda)
+        wave.omega = wave.k * wave.speed;// Angular frequency (omega = k * v)
+    });
+    // Update the plane geometry to reflect the new wave parameters
+};
 
 function makeWavesGui(scene, gui, plane, brownianWave) {
     const folder = gui.addFolder('Wave settings');
@@ -103,30 +94,36 @@ function makeWavesGui(scene, gui, plane, brownianWave) {
 
     /**
      * Wave controls
-        IDEA - use collections to store the values of the waves
-        - amplitude_collection
-        - frequency_collection
-        - velocity_collection
-        - phase_collection
-        Modify the values of the waves using the GUI, for each item in collection by the index
+     IDEA - use collections to store the values of the waves
+     - amplitude_collection
+     - frequency_collection
+     - velocity_collection
+     - phase_collection
+     Modify the values of the waves using the GUI, for each item in collection by the index
 
      */
-    const addWaveControls = (collection, name, min, max, step) => {
-        const subfolder = folder.addFolder(name);
-        for (const key in collection) {
-            subfolder.add(collection, key, min, max, step).name(key).onChange(() => {
-                // Update the corresponding plane property
-                plane[key] = collection[key];
-                updatewave();
-            });
-        }
-        subfolder.open();
-    };
+    waves.forEach((wave, index) => {
+        const waveFolder = folder.addFolder(`Wave ${index + 1}`);
 
-    // Add controls for each collection
-    addWaveControls(amplitude_collection, 'Amplitudes', 0, 10, 0.01);
-    addWaveControls(frequency_collection, 'Frequencies', 0, 10, 0.001);
-    addWaveControls(velocity_collection, 'Velocities', 0, 10, 0.001);
+        waveFolder.add(wave, 'amplitude', 0, 10, 0.01).onChange(updateWaveParameters);
+        waveFolder.add(wave, 'wavelength', 0.1, 100, 0.1).onChange(updateWaveParameters);
+        waveFolder.add(wave, 'speed', 0, 20, 0.1).onChange(updateWaveParameters);
+
+        // Add controls for direction if you want to modify them via GUI
+        // This is more complex as direction is a Vector2, not a simple number
+        const directionFolder = waveFolder.addFolder('Direction');
+        directionFolder.add(wave.direction, 'x', -1, 1, 0.01).onChange(() => {
+            wave.direction.normalize(); // Keep it a unit vector
+            updateWaveParameters();
+        });
+        directionFolder.add(wave.direction, 'y', -1, 1, 0.01).onChange(() => {
+            wave.direction.normalize(); // Keep it a unit vector
+            updateWaveParameters();
+        });
+        directionFolder.open();
+
+        waveFolder.open();
+    });
 
     folder.add(dn, 'Brownian_Waves').onChange((value) => {
         if (value) {

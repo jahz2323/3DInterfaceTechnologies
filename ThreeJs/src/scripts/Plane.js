@@ -11,16 +11,25 @@ import * as THREE from "three";
  *
  */
 
-const gridSize = 110;
-let spaceing = 15;
+const gridSize = 200;
+let spaceing = 5;
 
+const uvScaling = 0.1; // Scale UVs to fit the grid size
 const vertices = [];
 const normals = [];
+let uvs = [];
 // 2d Plane mesh of size gridSize x gridSize
 for (let i = -50; i < gridSize - 50; i++) {
     for (let j = -50; j < gridSize - 50; j++) {
-        vertices.push(i * spaceing, j * spaceing, 0);
+        vertices.push(i * spaceing, 0, j * spaceing);
         normals.push(0, 1, 0);
+
+        const plane_width = gridSize * spaceing;
+        const plane_height = gridSize * spaceing;
+
+        const normalizedU = (i * spaceing + 50) / plane_width;
+        const normalizedV = (j * spaceing + 50) / plane_height;
+        uvs.push(normalizedU * uvScaling, normalizedV * uvScaling);
     }
 }
 
@@ -33,27 +42,49 @@ for (let i = 0; i < gridSize - 1; i++) {
         const c = (i + 1) * gridSize + j;
         const d = (i + 1) * gridSize + j + 1;
         const e = i * gridSize + j;
-        indices.push(a, d, b);
-        indices.push(c, d, e);
+        indices.push(a, b, c);
+        indices.push(b, d, c);
     }
 }
 
 const geometry = new THREE.BufferGeometry();
 geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
 geometry.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
+geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
 geometry.setIndex(indices);
-geometry.rotateX(-Math.PI / 2);
+// geometry.rotateX(-Math.PI / 2);
 
 const geometry2 = new THREE.BufferGeometry();
 geometry2.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
 geometry2.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
+geometry2.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
 geometry2.setIndex(indices);
-geometry2.rotateX(-Math.PI / 2);
+// geometry2.rotateX(-Math.PI / 2);
+
+const cubemap_path = [
+    '../src/public/textures/envmaps/Oceanview.webp',
+    '../src/public/textures/envmaps/Oceanview.webp',
+    '../src/public/textures/envmaps/Oceanview.webp',
+    '../src/public/textures/envmaps/Oceanview.webp',
+    '../src/public/textures/envmaps/Oceanview.webp',
+    '../src/public/textures/envmaps/Oceanview.webp',
+    '../src/public/textures/envmaps/Oceanview.webp',
+]
+
+const cubemap = new THREE.CubeTextureLoader();
+let envMap = cubemap.load(cubemap_path);
+
+const cubeRenderTarget = new THREE.WebGLCubeRenderTarget( 256, { // 256 or 512 is common, higher is better quality but more costly
+    format: THREE.RGBFormat,
+    generateMipmaps: true,
+    minFilter: THREE.LinearMipmapLinearFilter
+} );
+
 
 const OceanFloor = new THREE.TextureLoader().load('../src/public/textures/oceanfloor.png');
 const OceanFloorMap = new THREE.MeshPhongMaterial({
     map: OceanFloor,
-    wireframe: false,
+    wireframe: true,
     side: THREE.DoubleSide,
     shininess: 20,
     flatShading: false,
@@ -65,79 +96,32 @@ let texture_map = new THREE.MeshPhongMaterial({
     wireframe: false,
     specular: new THREE.Color(1, 1, 1),
     flatShading: false,
-    envMap: null,
-    shininess: 70,
-    transparent: true,
-    opacity: 0.9,
+    envMap: envMap,
+    shininess: 90,
+    transparent: false,
+    opacity: 0.5,
+    reflectivity : 0.5,
 })
+
+const cubeCamera = new THREE.CubeCamera( 1, 100000, cubeRenderTarget ); // near, far, renderTarget
 
 let under_plane = new THREE.Mesh(geometry2, OceanFloorMap);
 under_plane.position.set(0, -20, 0)
 let plane = new THREE.Mesh(geometry, texture_map);
 plane.position.set(0, -10, 0);
+cubeCamera.position.copy(plane.position);
 
 const FlatPlane = plane;
 export {FlatPlane};
 
-const amplitude_collection = {};
-const frequency_collection = {};
-const velocity_collection = {};
-const phase_collection = {};
-const wavelength_collection = {};
-const w_collection = {};
-
-//Wave 1
-amplitude_collection.a1 = 1.5;
-frequency_collection.f1 = 0.1;
-velocity_collection.v1 = 3;
-wavelength_collection.wavelength1 = velocity_collection.v1 / frequency_collection.f1;
-phase_collection.phase1 = velocity_collection.v1 * 2 / wavelength_collection.wavelength1;
-w_collection.w1 = 2 / wavelength_collection.wavelength1;
-
-//Wave 2
-amplitude_collection.a2 = 1.3;
-frequency_collection.f2 = 0.1;
-velocity_collection.v2 = 10;
-wavelength_collection.wavelength2 = velocity_collection.v2 / frequency_collection.f2;
-phase_collection.phase2 = velocity_collection.v2 * 2 / wavelength_collection.wavelength2;
-w_collection.w2 = 2 / wavelength_collection.wavelength2;
-
-//Wave 3
-amplitude_collection.a3 = 5;
-frequency_collection.f3 = 0.4;
-velocity_collection.v3 = 10;
-wavelength_collection.wavelength3 = velocity_collection.v3 / frequency_collection.f3;
-phase_collection.phase3 = velocity_collection.v3 * 2 / wavelength_collection.wavelength3;
-w_collection.w3 = 2 / wavelength_collection.wavelength3;
-
-//Wave 4
-amplitude_collection.a4 = 0.1;
-frequency_collection.f4 = 1;
-velocity_collection.v4 = 10;
-wavelength_collection.wavelength4 = velocity_collection.v4 / frequency_collection.f4;
-phase_collection.phase4 = velocity_collection.v4 * 2 / wavelength_collection.wavelength4;
-w_collection.w4 = 2 / wavelength_collection.wavelength4;
-
-//Wave 5
-amplitude_collection.a5 = 0.01;
-frequency_collection.f5 = 2;
-velocity_collection.v5 = 10;
-wavelength_collection.wavelength5 = velocity_collection.v5 / frequency_collection.f5;
-phase_collection.phase5 = velocity_collection.v5 * 2 / wavelength_collection.wavelength5;
-w_collection.w5 = 2 / wavelength_collection.wavelength5;
-
-
-export{amplitude_collection, frequency_collection, velocity_collection, phase_collection, wavelength_collection, w_collection}
 const posAttribute = geometry.getAttribute('position');
 const normAttribute = geometry.getAttribute('normal');
 const seaBedPos = geometry2.getAttribute('position');
 const seaBedNorm = geometry2.getAttribute('normal');
 
-
 function specular(camera, light, Normal) {
     // H_vec = View_vec + Lightsrc_vec
     // Specular = H_vec.clone().dot(Normal)
-
     const View_vec = new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z).clone().normalize();
     const Light_vec = new THREE.Vector3(light.position.x, light.position.y, light.position.z).clone().normalize();
     const H_vec = View_vec.add(Light_vec).normalize();
@@ -147,72 +131,68 @@ function specular(camera, light, Normal) {
     // console.log(specular);
     return H_vec.dot(Normal);
 }
+// Copy initial position of the plane
+const initialPositions = new Float32Array(posAttribute.array.length);
+posAttribute.array.forEach((val, index) => {
+    initialPositions[index] = val;
+});
+
+export const waves = [
+    { amplitude: 1.5, wavelength: 20, direction: new THREE.Vector2(1, 1).normalize(), speed: 3 },
+    { amplitude: 1.3, wavelength: 10, direction: new THREE.Vector2(-1, 0.5).normalize(), speed: 10 },
+    { amplitude: 5, wavelength: 40, direction: new THREE.Vector2(0, 1).normalize(), speed: 10 },
+    { amplitude: 0.1, wavelength: 5, direction: new THREE.Vector2(1, 0).normalize(), speed: 10 },
+    { amplitude: 0.01, wavelength: 2, direction: new THREE.Vector2(-0.5, -1).normalize(), speed: 10 }
+];
+waves.forEach(wave => {
+    wave.k = (2 * Math.PI) / wave.wavelength; // Wave number (k = 2pi / lambda)
+    wave.omega = wave.k * wave.speed; // Angular frequency (omega = k * v)
+});
 
 function animate() {
-    const time = performance.now() * 0.001;
+    const time = performance.now() * 1e-3; // Convert to seconds
 
     for (let i = 0; i < posAttribute.count; i++) {
-        let x = posAttribute.getX(i);
-        let z = posAttribute.getZ(i);
-        let y = posAttribute.getY(i);
+        const x0 = initialPositions[i * 3];
+        const y0 = initialPositions[i * 3 + 1];
+        const z0 = initialPositions[i * 3 + 2];
 
-        // Calculate the y-displacement using a sine wave
-        // - Optimised gerstner waves using exponent of sin
+        let displacedY = y0;
+        let total_dydx = 0;
+        let total_dydz = 0;
+        waves.forEach(wave => {
+            const dot_product = wave.direction.x * x0 + wave.direction.y * z0;
+            const phase = dot_product * wave.k - wave.omega * time ;
 
-        // y =
-        //     a1 * Math.sin(w1 * (x - z) + time * phase_collection.phase1)
-        //     + a2 * Math.sin(w2 * (x + z) + time * phase_collection.phase2)
-        //     + a3 * Math.sin(w3 * (x + z) + time * phase_collection.phase3)
-        //     + a4 * Math.sin(w5 * (-x) + time * phase5)
-        //     + a5 * Math.sin(w5 * (z) + time * phase5)
-        // ;
-        y =
-            amplitude_collection.a1 * Math.exp(Math.sin(w_collection.w1 * (x - z) + time * phase_collection.phase1)) +
-            amplitude_collection.a2 * Math.exp(Math.sin(w_collection.w2 * (x + z) + time * phase_collection.phase2)) +
-            amplitude_collection.a3 * Math.exp(Math.sin(w_collection.w3 * (x + z) + time * phase_collection.phase3)) +
-            amplitude_collection.a4 * Math.exp(Math.sin(w_collection.w4 * (-x) + time * phase_collection.phase4)) +
-            amplitude_collection.a5 * Math.exp(Math.sin(w_collection.w5 * (z) + time * phase_collection.phase5))
-        ;
+            const waveHeight = wave.amplitude * Math.sin(phase);
+            displacedY += waveHeight;
 
-        // let dydx =
-        //     w1 * amplitude_collection.a1 * Math.cos(w1 * (x - z) + time * phase_collection.phase1) +
-        //     w2 * amplitude_collection.a2 * Math.cos(w2 * (x + z) + time * phase_collection.phase2) +
-        //     w3 * amplitude_collection.a3 * Math.cos(w3 * (x + z) + time * phase_collection.phase3) +
-        //     w4 * amplitude_collection.a4 * Math.sin(w4 * (-x) + time * phase_collection.phase4) +
-        //     w5 * amplitude_collection.a5 * Math.sin(w5 * (z) + time * phase_collection.phase5)
+            const cosPhase = Math.cos(phase);
+            total_dydx = wave.amplitude * wave.k * wave.direction.x * cosPhase;
+            total_dydz = wave.amplitude * wave.k * wave.direction.y * cosPhase;
+        })
+        posAttribute.setY(i, displacedY);
 
-        let dydx =
-            w_collection.w1 * amplitude_collection.a1 * Math.exp(Math.sin(w_collection.w1 * (x - z) + time * phase_collection.phase1)) * Math.cos(w_collection.w1 * (x - z) + time * phase_collection.phase1) +
-            w_collection.w2 * amplitude_collection.a2 * Math.exp(Math.sin(w_collection.w2 * (x + z) + time * phase_collection.phase2)) * Math.cos(w_collection.w2 * (x + z) + time * phase_collection.phase2) +
-            w_collection.w3 * amplitude_collection.a3 * Math.exp(Math.sin(w_collection.w3 * (x + z) + time * phase_collection.phase3)) * Math.cos(w_collection.w3 * (x + z) + time * phase_collection.phase3) +
-            w_collection.w4 * amplitude_collection.a4 * Math.exp(Math.sin(w_collection.w4 * (-x) + time * phase_collection.phase4)) *    Math.cos(w_collection.w4 * (-x) + time * phase_collection.phase4) +
-            w_collection.w5 * amplitude_collection.a5 * Math.exp(Math.sin(w_collection.w5 * (z) + time * phase_collection.phase5)) *     Math.cos(w_collection.w5 * (z) + time * phase_collection.phase5)
-        ;
-        let dydz = dydx
+        let TangentX = new THREE.Vector3(1, total_dydx, 0);
+        let TangentZ = new THREE.Vector3(0, total_dydz, 1);
 
+        let Normal = TangentX.clone().cross(TangentZ).normalize();
 
-        posAttribute.setY(i, y);
-
-        let Tangent = new THREE.Vector3(1, dydx, 0);
-        let T_normalized = Tangent.normalize()
-        let Binormal = new THREE.Vector3(0, dydz, -1);
-        let B_normalized = Binormal.normalize()
-        // N = T x B
-        let Normal = T_normalized.clone().cross(B_normalized);
-        Normal.normalize();
-        // N . L = cos(theta)
-        //Three js handles the dot product of the normal and light direction
+        if(Normal.y < 0){
+            Normal.y = -Normal.y;
+        }
         normAttribute.setXYZ(i, Normal.x, Normal.y, Normal.z);
         seaBedNorm.setXYZ(i, Normal.x, Normal.y, Normal.z);
     }
     posAttribute.needsUpdate = true;
     normAttribute.needsUpdate = true;
     seaBedNorm.needsUpdate = true;
+
     requestAnimationFrame(animate);
 }
-
+//
 animate();
 
 
 
-export {plane, under_plane};
+export {plane, under_plane, cubeCamera};
